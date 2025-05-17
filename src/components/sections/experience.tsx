@@ -147,8 +147,8 @@ export const Experience = () => {
       <div
         className="container mx-auto px-4 md:px-6 max-w-7xl relative z-10"
         style={{
-          opacity: opacity as any,
-          scale: scale as any,
+          opacity: opacity as unknown as number,
+          scale: scale as unknown as number,
           transition: "all 0.5s cubic-bezier(0.17, 0.55, 0.55, 1)"
         }}
       >

@@ -112,8 +112,8 @@ export const Contact = () => {
 
         <FloatingAnimation delay={0.1}>
           <p className="text-center text-muted-foreground max-w-2xl mx-auto mb-12">
-            I'm currently pursuing a Bachelor of Science in Computer Engineering and looking for opportunities
-            to build my skills. Feel free to reach out if you'd like to connect!
+            I&apos;m currently pursuing a Bachelor of Science in Computer Engineering and looking for opportunities
+            to build my skills. Feel free to reach out if you&apos;d like to connect!
           </p>
         </FloatingAnimation>
 

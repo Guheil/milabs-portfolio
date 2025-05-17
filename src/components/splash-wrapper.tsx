@@ -24,7 +24,7 @@ const SplashWrapper: React.FC<SplashWrapperProps> = ({ children }) => {
         setShowSplash(true);
         sessionStorage.setItem("hasVisited", "true");
       }
-    } catch (error) {
+    } catch {
       // Handle case where sessionStorage is not available
       console.log("SessionStorage not available, skipping splash screen");
     }

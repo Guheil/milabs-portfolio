@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 interface TimelineItemProps {
   title: string;
@@ -29,7 +28,7 @@ export const TimelineItem = ({
       {!isLast && (
         <div className="absolute top-8 bottom-0 left-4 w-0.5 bg-gradient-to-b from-blue-400 to-blue-100 dark:from-blue-600 dark:to-blue-900/30" />
       )}
-      
+
       <div className="relative flex gap-6">
         {/* Timeline dot */}
         <motion.div
@@ -43,7 +42,7 @@ export const TimelineItem = ({
             <span className="text-xs font-bold">{(index + 1).toString().padStart(2, '0')}</span>
           )}
         </motion.div>
-        
+
         {/* Content card */}
         <motion.div
           className="flex-1 mb-10"
@@ -65,7 +64,7 @@ export const TimelineItem = ({
                 {period}
               </span>
             </div>
-            
+
             {/* Description */}
             <div className="text-muted-foreground space-y-2">
               {Array.isArray(description) ? (
@@ -78,7 +77,7 @@ export const TimelineItem = ({
                 <p>{description}</p>
               )}
             </div>
-            
+
             {/* Animated border on hover */}
             <div className="absolute inset-0 pointer-events-none rounded-xl overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-1000" />

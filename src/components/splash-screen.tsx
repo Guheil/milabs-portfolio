@@ -232,7 +232,7 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ finishLoading }) => {
           ref={quoteRef}
           className="text-sm text-blue-400/70 text-center max-w-xs"
         >
-          "Creating positive experiences, one interaction at a time!"
+          &quot;Creating positive experiences, one interaction at a time!&quot;
         </p>
       </div>
     </div>

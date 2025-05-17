@@ -2,7 +2,6 @@
 
 import React, { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import gsap from "gsap";
 
 interface Particle {
   x: number;
@@ -58,7 +57,7 @@ export const ParticleEffect: React.FC<ParticleEffectProps> = ({
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement("div");
       particle.className = "absolute rounded-full";
-      
+
       // Use deterministic values for server rendering
       const size = Math.random() * (maxSize - minSize) + minSize;
       const x = Math.random() * containerRect.width;
@@ -76,9 +75,9 @@ export const ParticleEffect: React.FC<ParticleEffectProps> = ({
       particle.style.backgroundColor = color;
       particle.style.opacity = opacity.toString();
       particle.style.boxShadow = `0 0 ${size * 2}px ${color}`;
-      
+
       container.appendChild(particle);
-      
+
       particles.push({
         x,
         y,
@@ -90,55 +89,55 @@ export const ParticleEffect: React.FC<ParticleEffectProps> = ({
         element: particle
       });
     }
-    
+
     particlesRef.current = particles;
-    
+
     // Animation function
     const animate = () => {
       const containerRect = container.getBoundingClientRect();
-      
+
       particles.forEach(particle => {
         // Update position
         particle.x += particle.speedX;
         particle.y += particle.speedY;
-        
+
         // Handle mouse interaction
         if (interactive && mouseRef.current.active) {
           const dx = mouseRef.current.x - particle.x;
           const dy = mouseRef.current.y - particle.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           const maxDistance = 100;
-          
+
           if (distance < maxDistance) {
             const force = (1 - distance / maxDistance) * 0.5;
             particle.x -= dx * force;
             particle.y -= dy * force;
           }
         }
-        
+
         // Bounce off walls
         if (particle.x <= 0 || particle.x >= containerRect.width) {
           particle.speedX *= -1;
         }
-        
+
         if (particle.y <= 0 || particle.y >= containerRect.height) {
           particle.speedY *= -1;
         }
-        
+
         // Keep particles within bounds
         particle.x = Math.max(0, Math.min(containerRect.width, particle.x));
         particle.y = Math.max(0, Math.min(containerRect.height, particle.y));
-        
+
         // Update element position
         particle.element.style.transform = `translate(${particle.x}px, ${particle.y}px)`;
       });
-      
+
       animationRef.current = requestAnimationFrame(animate);
     };
-    
+
     // Start animation
     animationRef.current = requestAnimationFrame(animate);
-    
+
     // Mouse interaction
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
@@ -148,35 +147,35 @@ export const ParticleEffect: React.FC<ParticleEffectProps> = ({
         active: true
       };
     };
-    
+
     const handleMouseLeave = () => {
       mouseRef.current.active = false;
     };
-    
+
     if (interactive) {
       container.addEventListener("mousemove", handleMouseMove);
       container.addEventListener("mouseleave", handleMouseLeave);
     }
-    
+
     // Clean up
     return () => {
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      
+
       particles.forEach(particle => {
         if (particle.element.parentNode) {
           particle.element.parentNode.removeChild(particle.element);
         }
       });
-      
+
       if (interactive) {
         container.removeEventListener("mousemove", handleMouseMove);
         container.removeEventListener("mouseleave", handleMouseLeave);
       }
     };
   }, [particleCount, colors, minSize, maxSize, minSpeed, maxSpeed, minOpacity, maxOpacity, interactive]);
-  
+
   return (
     <div
       ref={containerRef}

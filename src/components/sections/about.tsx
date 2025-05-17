@@ -395,7 +395,7 @@ export const About = () => {
                       transition={{ duration: 0.5, delay: 0.2 }}
                       viewport={{ once: true }}
                     >
-                      I'm <span className="text-blue-600 dark:text-blue-400 font-semibold">Shelby Bianca R. Delgado</span>, a
+                      I&apos;m <span className="text-blue-600 dark:text-blue-400 font-semibold">Shelby Bianca R. Delgado</span>, a
                       <span className="text-blue-600 dark:text-blue-400 font-semibold"> practical individual</span> with strong morals,
                       professionalism, and work ethics from San Jose, Rodriguez, Rizal. I have demonstrated
                       effective communication skills during my senior high school and college years.
@@ -410,7 +410,7 @@ export const About = () => {
                     >
                       My experiences as a <span className="text-blue-600 dark:text-blue-400 font-semibold">Student Assistant</span> at JBEST School of Technology
                       have enhanced my ability to <span className="text-blue-600 dark:text-blue-400 font-semibold">communicate clearly and confidently</span>.
-                      I'm currently pursuing a <span className="text-blue-600 dark:text-blue-400 font-semibold">Bachelor of Science in Computer Engineering</span>
+                      I&apos;m currently pursuing a <span className="text-blue-600 dark:text-blue-400 font-semibold">Bachelor of Science in Computer Engineering</span>
                       and eager to build foundational skills in computer literacy and language fluency.
                     </motion.p>
 
@@ -433,8 +433,7 @@ export const About = () => {
                       transition={{ duration: 0.5, delay: 0.8 }}
                       viewport={{ once: true }}
                     >
-                      "I am committed to continuous improvement, adaptability, and applying a strong work ethic
-                      to achieve both personal and professional growth while contributing effectively to a dynamic team environment."
+                      &ldquo;                      I am committed to continuous improvement, adaptability, and applying a strong work ethic to achieve both personal and professional growth while contributing effectively to a dynamic team environment.&ldquo; 
                     </motion.p>
                   </div>
                 </div>

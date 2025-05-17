@@ -9,7 +9,8 @@ interface DarkModeStarsProps {
 }
 
 export const DarkModeStars: React.FC<DarkModeStarsProps> = ({ className }) => {
-  const { theme } = useTheme();
+  // Using useTheme hook to ensure proper context connection
+  useTheme();
 
   return (
     <div className="fixed inset-0 pointer-events-none z-[-1]">

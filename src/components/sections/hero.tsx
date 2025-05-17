@@ -54,14 +54,14 @@ export const Hero = () => {
         className="hidden dark:block" // Only show in dark mode
       />
 
-      {/* Subtle grid pattern - black in light mode, white in dark mode */}
+      {/* Subtle grid pattern - only visible in light mode */}
       <GridPattern
         size={50}
         lineWidth={1.2}
         lineColor="var(--grid-color, #000000)"
         opacity={0.08}
         zIndex={1}
-        className="[--grid-color:#000000] dark:[--grid-color:#FFFFFF]"
+        className="[--grid-color:#000000] block dark:hidden"
       />
 
       {/* Main content with diagonal layout */}

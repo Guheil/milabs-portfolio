@@ -83,11 +83,11 @@ export const Sparkles: React.FC<SparklesProps> = ({
           id: randomId,
           size: randomSize,
           style: {
-            position: "absolute",
+            position: "absolute" as const,
             top: `${randomTop}%`,
             left: `${randomLeft}%`,
             zIndex: 2,
-          },
+          } as React.CSSProperties,
         });
       }
 

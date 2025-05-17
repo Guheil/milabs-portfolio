@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, Github, Twitter, Linkedin, Instagram } from "lucide-react";
+import { Heart, GithubIcon, TwitterIcon, LinkedinIcon, InstagramIcon } from "lucide-react";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -20,28 +20,28 @@ export const Footer = () => {
               href="#"
               className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              <Github className="w-5 h-5" />
+              <GithubIcon className="w-5 h-5" />
               <span className="sr-only">GitHub</span>
             </Link>
             <Link
               href="#"
               className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              <Twitter className="w-5 h-5" />
+              <TwitterIcon className="w-5 h-5" />
               <span className="sr-only">Twitter</span>
             </Link>
             <Link
               href="#"
               className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              <Linkedin className="w-5 h-5" />
+              <LinkedinIcon className="w-5 h-5" />
               <span className="sr-only">LinkedIn</span>
             </Link>
             <Link
               href="#"
               className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              <Instagram className="w-5 h-5" />
+              <InstagramIcon className="w-5 h-5" />
               <span className="sr-only">Instagram</span>
             </Link>
           </div>
