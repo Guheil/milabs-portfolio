@@ -8,12 +8,62 @@ import TextAnimation from "@/components/ui/text-animation";
 import Sparkles from "@/components/ui/sparkles";
 import { motion, AnimatePresence } from "framer-motion";
 import AuroraBackground from "@/components/ui/aurora-background";
+import StarsBackground from "@/components/ui/stars-background";
+import GridPattern from "@/components/ui/grid-pattern";
+import AnimatedBlobs from "@/components/ui/animated-blobs";
 
 export const Hero = () => {
   const [isImageHovered, setIsImageHovered] = useState(false);
 
   return (
-    <AuroraBackground className="min-h-screen w-full flex flex-col items-center justify-center py-20 overflow-hidden">
+    <AuroraBackground className="min-h-screen w-full flex flex-col items-center justify-center py-20 overflow-hidden bg-gradient-to-b from-blue-50 to-white dark:from-blue-950 dark:to-neutral-900">
+      {/* Animated blurred blobs in the background - more visible in light mode */}
+      <AnimatedBlobs
+        blobCount={3}
+        colors={["#3B82F6", "#60A5FA", "#93C5FD"]}
+        minSize={500}
+        maxSize={800}
+        minBlur={90}  // Slightly less blur for more visibility
+        maxBlur={130}  // Slightly less blur for more visibility
+        minOpacity={0.08}  // Increased opacity for light mode
+        maxOpacity={0.15}  // Increased opacity for light mode
+        zIndex={0}
+        leftSideOnly={true}  // Keep blobs only on the left side
+        className="opacity-[0.85] dark:opacity-[0.6]" // More visible in light mode
+      />
+
+      {/* Blue glowing stars in light mode */}
+      <StarsBackground
+        count={50}
+        color="#3B82F6" // Blue color
+        maxSize={3.5}
+        minSize={1.8}
+        opacity={0.9}
+        zIndex={1}
+        className="block dark:hidden" // Only show in light mode
+      />
+
+      {/* Stars for dark mode */}
+      <StarsBackground
+        count={50}
+        color="#FFFFFF"
+        maxSize={3.5}
+        minSize={1.8}
+        opacity={0.9}
+        zIndex={1}
+        className="hidden dark:block" // Only show in dark mode
+      />
+
+      {/* Subtle grid pattern - black in light mode, white in dark mode */}
+      <GridPattern
+        size={50}
+        lineWidth={1.2}
+        lineColor="var(--grid-color, #000000)"
+        opacity={0.08}
+        zIndex={1}
+        className="[--grid-color:#000000] dark:[--grid-color:#FFFFFF]"
+      />
+
       {/* Main content with diagonal layout */}
       <div className="container mx-auto px-4 md:px-6 max-w-7xl relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
@@ -26,8 +76,8 @@ export const Hero = () => {
                   animate={{ scale: [1, 1.2, 1] }}
                   transition={{ duration: 4, repeat: Infinity }}
                 />
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight relative z-10">
-                  <TextAnimation text="Hi, I'm" delay={0.2} />
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight relative z-10 dark:text-white">
+                  <TextAnimation text="Hi, I'm" delay={0.2} className="dark:text-white" />
                   <br />
                   <Sparkles color="#6495ED">
                     <span className="bg-gradient-to-r from-blue-500 to-cyan-500 bg-clip-text text-transparent">
@@ -40,7 +90,7 @@ export const Hero = () => {
 
             <FloatingAnimation delay={0.3} yOffset={20}>
               <div className="relative pl-4 border-l-2 border-blue-300 dark:border-blue-700">
-                <p className="text-xl text-muted-foreground max-w-[600px]">
+                <p className="text-xl text-muted-foreground max-w-[600px] dark:text-white/90">
                   A practical individual with strong morals and professionalism, pursuing a
                   Bachelor of Science in Computer Engineering with a focus on technical skills
                   and continuous improvement.
@@ -59,7 +109,7 @@ export const Hero = () => {
                 <Button
                   size="lg"
                   variant="outline"
-                  className="rounded-full border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1"
+                  className="rounded-full border-blue-300 hover:bg-blue-50 dark:hover:bg-blue-950 transition-all duration-300 shadow-sm hover:shadow-md hover:-translate-y-1 dark:text-white"
                 >
                   View Resume
                 </Button>

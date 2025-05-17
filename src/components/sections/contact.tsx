@@ -6,6 +6,8 @@ import FloatingAnimation from "@/components/ui/floating-animation";
 import { Mail, Phone, MapPin, Globe, Send, Download } from "lucide-react";
 import { motion } from "framer-motion";
 import Sparkles from "@/components/ui/sparkles";
+import StarsBackground from "@/components/ui/stars-background";
+import GridPattern from "@/components/ui/grid-pattern";
 import { cn } from "@/lib/utils";
 
 // Define contact items outside the component to avoid re-creation on each render
@@ -54,6 +56,38 @@ export const Contact = () => {
     <section id="contact" className="py-20 min-h-screen w-full relative overflow-hidden">
       {/* Cute background with gradient */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-50 to-white dark:from-blue-950/20 dark:to-neutral-900 -z-10" />
+
+      {/* Blue glowing stars in light mode */}
+      <StarsBackground
+        count={30}
+        color="#3B82F6" // Blue color
+        maxSize={2.5}
+        minSize={1.2}
+        opacity={0.8}
+        zIndex={1}
+        className="block dark:hidden" // Only show in light mode
+      />
+
+      {/* Stars for dark mode */}
+      <StarsBackground
+        count={30}
+        color="#FFFFFF"
+        maxSize={2.5}
+        minSize={1.2}
+        opacity={0.7}
+        zIndex={1}
+        className="hidden dark:block" // Only show in dark mode
+      />
+
+      {/* Subtle grid pattern - black in light mode, white in dark mode */}
+      <GridPattern
+        size={35}
+        lineWidth={1.2}
+        lineColor="var(--grid-color, #000000)"
+        opacity={0.07}
+        zIndex={1}
+        className="[--grid-color:#000000] dark:[--grid-color:#FFFFFF]"
+      />
 
       {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-blue-200/20 dark:bg-blue-800/10 blur-3xl -z-5" />

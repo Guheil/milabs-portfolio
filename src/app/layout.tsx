@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SplashWrapper from "@/components/splash-wrapper";
+import { ThemeProvider } from "@/context/theme-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,13 +25,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="scroll-smooth">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SplashWrapper>
-          {children}
-        </SplashWrapper>
+        <ThemeProvider>
+          <SplashWrapper>
+            {children}
+          </SplashWrapper>
+        </ThemeProvider>
       </body>
     </html>
   );

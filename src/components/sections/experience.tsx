@@ -7,6 +7,8 @@ import Timeline from "@/components/ui/timeline";
 import SkillCard from "@/components/ui/skill-card";
 import TextAnimation from "@/components/ui/text-animation";
 import Sparkles from "@/components/ui/sparkles";
+import StarsBackground from "@/components/ui/stars-background";
+import GridPattern from "@/components/ui/grid-pattern";
 import {
   MessageSquare,
   Headphones,
@@ -102,6 +104,38 @@ export const Experience = () => {
 
   return (
     <section ref={sectionRef} id="experience" className="py-20 min-h-screen w-full relative overflow-hidden">
+      {/* Blue glowing stars in light mode */}
+      <StarsBackground
+        count={25}
+        color="#3B82F6" // Blue color
+        maxSize={2.5}
+        minSize={1.2}
+        opacity={0.8}
+        zIndex={1}
+        className="block dark:hidden" // Only show in light mode
+      />
+
+      {/* Stars for dark mode */}
+      <StarsBackground
+        count={25}
+        color="#FFFFFF"
+        maxSize={2.5}
+        minSize={1.2}
+        opacity={0.7}
+        zIndex={1}
+        className="hidden dark:block" // Only show in dark mode
+      />
+
+      {/* Subtle grid pattern - black in light mode, white in dark mode */}
+      <GridPattern
+        size={45}
+        lineWidth={1.2}
+        lineColor="var(--grid-color, #000000)"
+        opacity={0.07}
+        zIndex={1}
+        className="[--grid-color:#000000] dark:[--grid-color:#FFFFFF]"
+      />
+
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-blue-50/50 to-transparent dark:from-blue-950/30 dark:to-transparent" />

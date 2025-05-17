@@ -8,6 +8,8 @@ import MouseFollowCard from "@/components/ui/mouse-follow-card";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Heart, Star, Coffee, Smile, Award, Zap, Brain, Lightbulb } from "lucide-react";
+import StarsBackground from "@/components/ui/stars-background";
+import GridPattern from "@/components/ui/grid-pattern";
 
 // Expertise Item Component
 interface ExpertiseItemProps {
@@ -160,6 +162,38 @@ export const About = () => {
 
   return (
     <section id="about" className="py-20 min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-blue-950 dark:to-neutral-900 w-full overflow-hidden relative">
+      {/* Blue glowing stars in light mode */}
+      <StarsBackground
+        count={30}
+        color="#3B82F6" // Blue color
+        maxSize={2.5}
+        minSize={1.2}
+        opacity={0.8}
+        zIndex={1}
+        className="block dark:hidden" // Only show in light mode
+      />
+
+      {/* Stars for dark mode */}
+      <StarsBackground
+        count={30}
+        color="#FFFFFF"
+        maxSize={2.5}
+        minSize={1.2}
+        opacity={0.7}
+        zIndex={1}
+        className="hidden dark:block" // Only show in dark mode
+      />
+
+      {/* Subtle grid pattern - black in light mode, white in dark mode */}
+      <GridPattern
+        size={50}
+        lineWidth={1.2}
+        lineColor="var(--grid-color, #000000)"
+        opacity={0.07}
+        zIndex={1}
+        className="[--grid-color:#000000] dark:[--grid-color:#FFFFFF]"
+      />
+
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none">
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-blue-300 dark:bg-blue-700 blur-3xl" />

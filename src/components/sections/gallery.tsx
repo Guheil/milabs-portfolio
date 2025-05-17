@@ -8,6 +8,8 @@ import FloatingAnimation from "@/components/ui/floating-animation";
 import TextAnimation from "@/components/ui/text-animation";
 import Sparkles from "@/components/ui/sparkles";
 import TiltCard from "@/components/ui/tilt-card";
+import StarsBackground from "@/components/ui/stars-background";
+import GridPattern from "@/components/ui/grid-pattern";
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera } from "lucide-react";
 
 // Sample gallery items - replace with actual content
@@ -127,6 +129,38 @@ export const Gallery = () => {
       id="gallery"
       ref={sectionRef}
       className="py-20 min-h-screen w-full bg-gradient-to-b from-white to-blue-50 dark:from-neutral-900 dark:to-blue-950/50 relative overflow-hidden">
+      {/* Blue glowing stars in light mode */}
+      <StarsBackground
+        count={35}
+        color="#3B82F6" // Blue color
+        maxSize={2.5}
+        minSize={1.2}
+        opacity={0.8}
+        zIndex={1}
+        className="block dark:hidden" // Only show in light mode
+      />
+
+      {/* Stars for dark mode */}
+      <StarsBackground
+        count={35}
+        color="#FFFFFF"
+        maxSize={2.5}
+        minSize={1.2}
+        opacity={0.7}
+        zIndex={1}
+        className="hidden dark:block" // Only show in dark mode
+      />
+
+      {/* Subtle grid pattern - black in light mode, white in dark mode */}
+      <GridPattern
+        size={40}
+        lineWidth={1.2}
+        lineColor="var(--grid-color, #000000)"
+        opacity={0.07}
+        zIndex={1}
+        className="[--grid-color:#000000] dark:[--grid-color:#FFFFFF]"
+      />
+
       {/* Background decorative elements */}
       <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-200/20 dark:bg-blue-700/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-cyan-200/20 dark:bg-cyan-700/10 rounded-full blur-3xl"></div>

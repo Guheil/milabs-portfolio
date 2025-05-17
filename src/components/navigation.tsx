@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
+import ThemeToggle from "@/components/ui/theme-toggle";
 
 export const Navigation = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -57,6 +58,7 @@ export const Navigation = () => {
                 {item.name}
               </Link>
             ))}
+            <ThemeToggle />
             <Button className="rounded-full bg-blue-500 hover:bg-blue-600">
               Hire Me
             </Button>
@@ -93,6 +95,10 @@ export const Navigation = () => {
                   {item.name}
                 </Link>
               ))}
+              <div className="flex items-center py-2">
+                <span className="text-sm font-medium mr-3">Theme:</span>
+                <ThemeToggle />
+              </div>
               <Button className="rounded-full bg-blue-500 hover:bg-blue-600 w-full">
                 Hire Me
               </Button>
