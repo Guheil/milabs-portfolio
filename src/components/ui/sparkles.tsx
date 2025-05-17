@@ -54,20 +54,38 @@ export const Sparkles: React.FC<SparklesProps> = ({
   color = "#FFC700",
 }) => {
   const [sparkles, setSparkles] = useState<Array<{ id: number; size: number; style: React.CSSProperties }>>([]);
+  const [isMounted, setIsMounted] = useState(false);
 
+  // Only run client-side to prevent hydration mismatch
   useEffect(() => {
+    setIsMounted(true);
+
     const generateSparkles = () => {
+      // Fixed positions for initial server render to prevent hydration mismatch
+      const positions = [
+        { top: 20, left: 15 },
+        { top: 80, left: 60 },
+        { top: 40, left: 90 },
+        { top: 10, left: 45 }
+      ];
+
       const newSparkles = [];
       const sparkleCount = 4;
 
       for (let i = 0; i < sparkleCount; i++) {
+        // Use deterministic values for server rendering, random only on client
+        const randomId = isMounted ? Math.random() : i + 0.1;
+        const randomSize = isMounted ? Math.random() * 10 + 10 : 15;
+        const randomTop = isMounted ? Math.random() * 100 : positions[i].top;
+        const randomLeft = isMounted ? Math.random() * 100 : positions[i].left;
+
         newSparkles.push({
-          id: Math.random(),
-          size: Math.random() * 10 + 10,
+          id: randomId,
+          size: randomSize,
           style: {
             position: "absolute",
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
+            top: `${randomTop}%`,
+            left: `${randomLeft}%`,
             zIndex: 2,
           },
         });
@@ -80,7 +98,7 @@ export const Sparkles: React.FC<SparklesProps> = ({
     const interval = setInterval(generateSparkles, 3000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isMounted]);
 
   return (
     <div className={`relative inline-block ${className}`}>

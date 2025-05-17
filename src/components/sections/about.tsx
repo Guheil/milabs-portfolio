@@ -237,29 +237,50 @@ export const About = () => {
                   shadow="0 25px 50px -12px rgba(59, 130, 246, 0.25)"
                 >
                 <div className="aspect-[4/5] relative">
-                  {/* Animated particles on hover */}
+                  {/* Animated particles on hover - with fixed positions to prevent hydration mismatch */}
                   <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                    {[...Array(8)].map((_, i) => (
-                      <motion.div
-                        key={i}
-                        className="absolute w-1.5 h-1.5 rounded-full bg-blue-400"
-                        style={{
-                          left: `${Math.random() * 100}%`,
-                          top: `${Math.random() * 100}%`,
-                        }}
-                        animate={{
-                          y: [0, -40 - (Math.random() * 60)],
-                          x: [0, (Math.random() * 20) - 10],
-                          scale: [0, 1, 0],
-                          opacity: [0, 1, 0]
-                        }}
-                        transition={{
-                          duration: 2 + Math.random() * 2,
-                          repeat: Infinity,
-                          delay: Math.random() * 2
-                        }}
-                      />
-                    ))}
+                    {[...Array(8)].map((_, i) => {
+                      // Use fixed positions based on index instead of random values
+                      const positions = [
+                        { left: 15, top: 20 },
+                        { left: 35, top: 45 },
+                        { left: 65, top: 30 },
+                        { left: 85, top: 60 },
+                        { left: 25, top: 75 },
+                        { left: 45, top: 15 },
+                        { left: 75, top: 85 },
+                        { left: 90, top: 40 },
+                      ];
+                      const pos = positions[i];
+
+                      // Fixed animation values based on index
+                      const yMovement = -40 - (i * 7);
+                      const xMovement = (i % 2 === 0) ? 10 : -10;
+                      const duration = 2 + (i * 0.2);
+                      const delay = i * 0.25;
+
+                      return (
+                        <motion.div
+                          key={i}
+                          className="absolute w-1.5 h-1.5 rounded-full bg-blue-400"
+                          style={{
+                            left: `${pos.left}%`,
+                            top: `${pos.top}%`,
+                          }}
+                          animate={{
+                            y: [0, yMovement],
+                            x: [0, xMovement],
+                            scale: [0, 1, 0],
+                            opacity: [0, 1, 0]
+                          }}
+                          transition={{
+                            duration: duration,
+                            repeat: Infinity,
+                            delay: delay
+                          }}
+                        />
+                      );
+                    })}
                   </div>
 
                   {/* Image with hover zoom effect */}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -77,7 +77,13 @@ export const Gallery = () => {
   const [selectedImage, setSelectedImage] = useState<number | null>(null);
   const [activeCategory, setActiveCategory] = useState("All");
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
+
+  // Set isMounted to true after component mounts to prevent hydration mismatch
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   // Scroll animations
   const { scrollYProgress } = useScroll({
@@ -125,27 +131,37 @@ export const Gallery = () => {
       <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-200/20 dark:bg-blue-700/10 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-cyan-200/20 dark:bg-cyan-700/10 rounded-full blur-3xl"></div>
 
-      {/* Animated dots pattern */}
+      {/* Animated dots pattern with fixed positions to prevent hydration mismatch */}
       <div className="absolute inset-0 opacity-10 dark:opacity-20 pointer-events-none">
-        {[...Array(20)].map((_, i) => (
-          <motion.div
-            key={i}
-            className="absolute w-1 h-1 rounded-full bg-blue-500"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-            }}
-            animate={{
-              opacity: [0.3, 0.8, 0.3],
-              scale: [1, 1.5, 1],
-            }}
-            transition={{
-              duration: 5 + Math.random() * 5,
-              repeat: Infinity,
-              delay: Math.random() * 5,
-            }}
-          />
-        ))}
+        {[...Array(20)].map((_, i) => {
+          // Use fixed positions based on index instead of random values
+          const left = 5 + (i * 4.5) % 90; // Distribute dots horizontally
+          const top = 10 + (i * 4.3) % 80; // Distribute dots vertically
+
+          // Fixed animation values based on index
+          const duration = 5 + (i % 5);
+          const delay = (i % 5) * 1.2;
+
+          return (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 rounded-full bg-blue-500"
+              style={{
+                left: `${left}%`,
+                top: `${top}%`,
+              }}
+              animate={{
+                opacity: [0.3, 0.8, 0.3],
+                scale: [1, 1.5, 1],
+              }}
+              transition={{
+                duration: duration,
+                repeat: Infinity,
+                delay: delay,
+              }}
+            />
+          );
+        })}
       </div>
 
       <div className="container mx-auto px-4 md:px-6 max-w-7xl relative z-10">
@@ -224,23 +240,23 @@ export const Gallery = () => {
                 borderRadius="0.75rem"
               >
                 <div className="relative overflow-hidden rounded-xl shadow-lg aspect-[4/3] bg-white dark:bg-neutral-800">
-                  {/* Animated border on hover */}
+                  {/* Animated border on hover - only apply hover effects on client side after mounting */}
                   <div className="absolute inset-0 z-10 pointer-events-none">
                     <div className={cn(
                       "absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent transform -translate-x-full transition-transform duration-1000",
-                      hoveredItem === item.id && "translate-x-0"
+                      isMounted && hoveredItem === item.id && "translate-x-0"
                     )}></div>
                     <div className={cn(
                       "absolute top-0 right-0 w-0.5 h-full bg-gradient-to-b from-transparent via-blue-400 to-transparent transform -translate-y-full transition-transform duration-1000 delay-150",
-                      hoveredItem === item.id && "translate-y-0"
+                      isMounted && hoveredItem === item.id && "translate-y-0"
                     )}></div>
                     <div className={cn(
                       "absolute bottom-0 right-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent transform translate-x-full transition-transform duration-1000 delay-300",
-                      hoveredItem === item.id && "-translate-x-0"
+                      isMounted && hoveredItem === item.id && "-translate-x-0"
                     )}></div>
                     <div className={cn(
                       "absolute bottom-0 left-0 w-0.5 h-full bg-gradient-to-b from-transparent via-cyan-400 to-transparent transform translate-y-full transition-transform duration-1000 delay-450",
-                      hoveredItem === item.id && "-translate-y-0"
+                      isMounted && hoveredItem === item.id && "-translate-y-0"
                     )}></div>
                   </div>
 
@@ -252,15 +268,15 @@ export const Gallery = () => {
                       fill
                       className={cn(
                         "object-cover transition-transform duration-700 ease-out",
-                        hoveredItem === item.id ? "scale-110" : "scale-100"
+                        isMounted && hoveredItem === item.id ? "scale-110" : "scale-100"
                       )}
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
 
-                    {/* Overlay */}
+                    {/* Overlay - only apply hover effects on client side after mounting */}
                     <div className={cn(
                       "absolute inset-0 bg-gradient-to-t from-blue-900/80 via-blue-900/40 to-transparent transition-opacity duration-300",
-                      hoveredItem === item.id ? "opacity-100" : "opacity-0"
+                      isMounted && hoveredItem === item.id ? "opacity-100" : "opacity-0"
                     )}>
                       <div className="absolute inset-0 flex flex-col justify-end p-6 text-white">
                         <h3 className="text-xl font-bold mb-2 transform transition-transform duration-300 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100">{item.title}</h3>
