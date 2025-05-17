@@ -8,7 +8,7 @@ import { Mail, Phone, MapPin, Linkedin } from "lucide-react";
 
 export const Contact = () => {
   return (
-    <section id="contact" className="py-20 bg-neutral-50 dark:bg-neutral-900 w-full">
+    <section id="contact" className="py-20 min-h-screen bg-neutral-50 dark:bg-neutral-900 w-full">
       <div className="container mx-auto px-4 md:px-6 max-w-7xl">
         <FloatingAnimation>
           <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">

@@ -4,22 +4,50 @@ import React from "react";
 import FloatingAnimation from "@/components/ui/floating-animation";
 import TextAnimation from "@/components/ui/text-animation";
 import Sparkles from "@/components/ui/sparkles";
+import MouseFollowCard from "@/components/ui/mouse-follow-card";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { Heart, Star, Coffee, Smile, Award, Zap, Brain, Lightbulb } from "lucide-react";
 
-// Honeycomb Hexagon Component
-interface HoneycombHexProps {
-  skill: { name: string; level: number };
+// Expertise Item Component
+interface ExpertiseItemProps {
+  skill: { name: string; level: number; description?: string };
   index: number;
+  isEven?: boolean;
 }
 
-const HoneycombHex: React.FC<HoneycombHexProps> = ({ skill, index }) => {
+const ExpertiseItem: React.FC<ExpertiseItemProps> = ({ skill, index, isEven = true }) => {
+  // Generate a unique pattern for each skill
+  const patternElements = Array.from({ length: 3 }, (_, i) => {
+    const size = 10 + (i * 5);
+    const opacity = 0.1 + (i * 0.05);
+    const delay = i * 0.1;
+
+    return (
+      <motion.div
+        key={i}
+        className={`absolute rounded-full bg-blue-400/10 dark:bg-blue-400/5`}
+        style={{
+          width: size,
+          height: size,
+          top: `${15 + (i * 20)}%`,
+          right: isEven ? `${10 + (i * 8)}%` : 'auto',
+          left: isEven ? 'auto' : `${10 + (i * 8)}%`,
+          opacity
+        }}
+        initial={{ scale: 0, opacity: 0 }}
+        whileInView={{ scale: 1, opacity }}
+        transition={{ duration: 0.5, delay: 0.3 + delay }}
+        viewport={{ once: true }}
+      />
+    );
+  });
+
   return (
     <motion.div
-      className="relative mx-2"
-      initial={{ opacity: 0, scale: 0.8, y: 20 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      className="relative"
+      initial={{ opacity: 0, y: 20, x: isEven ? -20 : 20 }}
+      whileInView={{ opacity: 1, y: 0, x: 0 }}
       transition={{
         duration: 0.7,
         delay: 0.15 * index,
@@ -29,81 +57,43 @@ const HoneycombHex: React.FC<HoneycombHexProps> = ({ skill, index }) => {
       viewport={{ once: true }}
       whileHover={{
         y: -5,
-        zIndex: 10,
         transition: { duration: 0.2 }
       }}
     >
-      <div className="group relative">
-        {/* Hexagon shape with SVG */}
-        <div className="w-36 h-36 relative transform transition-all duration-300 group-hover:scale-105">
-          {/* SVG Hexagon */}
-          <svg
-            className="absolute inset-0 w-full h-full"
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-          >
-            {/* Gradient definitions */}
-            <defs>
-              <linearGradient id={`hexGradient-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgba(96, 165, 250, 0.2)" />
-                <stop offset="100%" stopColor="rgba(34, 211, 238, 0.2)" />
-              </linearGradient>
-              <linearGradient id={`hexGradientHover-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgba(96, 165, 250, 0.3)" />
-                <stop offset="100%" stopColor="rgba(34, 211, 238, 0.3)" />
-              </linearGradient>
-              <linearGradient id={`hexGradientDark-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgba(59, 130, 246, 0.2)" />
-                <stop offset="100%" stopColor="rgba(6, 182, 212, 0.2)" />
-              </linearGradient>
-              <linearGradient id={`hexGradientDarkHover-${index}`} x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgba(59, 130, 246, 0.3)" />
-                <stop offset="100%" stopColor="rgba(6, 182, 212, 0.3)" />
-              </linearGradient>
-            </defs>
+      <div className="group relative bg-gradient-to-br from-white to-blue-50 dark:from-neutral-900 dark:to-blue-950/30 rounded-xl p-6 shadow-md border border-blue-100 dark:border-blue-900/50 overflow-hidden backdrop-blur-sm">
+        {/* Background decoration */}
+        <div className="absolute -right-12 -top-12 w-40 h-40 bg-blue-400/5 rounded-full transform transition-transform duration-500 group-hover:scale-150"></div>
+        <div className="absolute -left-12 -bottom-12 w-32 h-32 bg-cyan-400/5 rounded-full transform transition-transform duration-500 group-hover:scale-150"></div>
 
-            {/* Outer glow hexagon (visible on hover) */}
-            <polygon
-              points="50,0 95,25 95,75 50,100 5,75 5,25"
-              fill="none"
-              stroke="url(#hexGradientHover-${index})"
-              strokeWidth="2"
-              className="opacity-0 group-hover:opacity-100 transition-opacity duration-500 dark:stroke-[url(#hexGradientDarkHover-${index})]"
-            />
+        {/* Pattern elements */}
+        {patternElements}
 
-            {/* Main hexagon */}
-            <polygon
-              points="50,3 92,26.5 92,73.5 50,97 8,73.5 8,26.5"
-              fill="url(#hexGradient-${index})"
-              className="transition-all duration-500 group-hover:fill-[url(#hexGradientHover-${index})] dark:fill-[url(#hexGradientDark-${index})] dark:group-hover:fill-[url(#hexGradientDarkHover-${index})]"
-            />
-
-            {/* Inner hexagon (white/dark background) */}
-            <polygon
-              points="50,6 89,28 89,72 50,94 11,72 11,28"
-              fill="white"
-              className="dark:fill-neutral-900"
-            />
-          </svg>
-
-          {/* Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center p-4 z-10">
-            <span className="text-blue-500 dark:text-blue-400 text-base font-bold mb-2 text-center">{skill.name}</span>
-            <div className="w-8 h-0.5 bg-gradient-to-r from-blue-400 to-cyan-500"></div>
+        {/* Skill name with animated underline */}
+        <div className="relative z-10 mb-3">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500"></div>
+            <h4 className="text-xl font-bold text-blue-600 dark:text-blue-400">{skill.name}</h4>
           </div>
+          <div className="h-0.5 w-0 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full group-hover:w-full transition-all duration-700 ease-out ml-4"></div>
         </div>
 
-        {/* Animated dots around hexagon on hover */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        <div className="absolute top-1/4 right-0 translate-x-1/2 w-2 h-2 rounded-full bg-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75"></div>
-        <div className="absolute bottom-1/4 right-0 translate-x-1/2 w-2 h-2 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-150"></div>
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-2 h-2 rounded-full bg-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200"></div>
-        <div className="absolute bottom-1/4 left-0 -translate-x-1/2 w-2 h-2 rounded-full bg-blue-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-150"></div>
-        <div className="absolute top-1/4 left-0 -translate-x-1/2 w-2 h-2 rounded-full bg-cyan-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75"></div>
+        {/* Description */}
+        {skill.description && (
+          <p className="text-muted-foreground text-sm relative z-10 ml-4">{skill.description}</p>
+        )}
 
-        {/* Connection lines to adjacent hexagons (visible on hover) */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-8 -translate-y-full bg-gradient-to-t from-blue-400/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
-        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0.5 h-8 translate-y-full bg-gradient-to-b from-blue-400/30 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+        {/* Decorative elements */}
+        <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-blue-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div className="absolute top-4 right-4 w-1.5 h-1.5 rounded-full bg-cyan-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100"></div>
+        <div className="absolute top-6 right-6 w-1 h-1 rounded-full bg-blue-400/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200"></div>
+
+        {/* Animated border on hover */}
+        <div className="absolute inset-0 rounded-xl overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+          <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1500"></div>
+          <div className="absolute top-0 right-0 w-0.5 h-full bg-gradient-to-b from-transparent via-blue-400 to-transparent transform -translate-y-full group-hover:translate-y-full transition-transform duration-1500 delay-200"></div>
+          <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent transform translate-x-full group-hover:-translate-x-full transition-transform duration-1500 delay-400"></div>
+          <div className="absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b from-transparent via-cyan-400 to-transparent transform translate-y-full group-hover:-translate-y-full transition-transform duration-1500 delay-600"></div>
+        </div>
       </div>
     </motion.div>
   );
@@ -111,29 +101,65 @@ const HoneycombHex: React.FC<HoneycombHexProps> = ({ skill, index }) => {
 
 export const About = () => {
   const skills = [
-    { name: "Customer Service", level: 90 },
-    { name: "Problem Solving", level: 85 },
-    { name: "Communication", level: 95 },
-    { name: "Empathy", level: 90 },
-    { name: "Technical Support", level: 80 },
+    {
+      name: "Layout Artist",
+      level: 90,
+      description: "Creating visually appealing layouts for various digital and print materials."
+    },
+    {
+      name: "Technical Skills",
+      level: 85,
+      description: "Proficient in technical problem-solving and implementing practical solutions."
+    },
+    {
+      name: "Hardware Development",
+      level: 85,
+      description: "Experience with computer hardware components and system assembly."
+    },
+    {
+      name: "Operating System Setup",
+      level: 90,
+      description: "Installing and configuring operating systems and essential software."
+    },
+    {
+      name: "Microsoft Skills",
+      level: 95,
+      description: "Proficient in Microsoft Word, Excel, PowerPoint, Outlook, and Social Media Platforms."
+    },
   ];
 
   const interests = [
-    { icon: <Heart className="w-5 h-5" />, text: "Helping Others" },
+    { icon: <Heart className="w-5 h-5" />, text: "Computer Technology" },
     { icon: <Star className="w-5 h-5" />, text: "Learning New Skills" },
-    { icon: <Coffee className="w-5 h-5" />, text: "Coffee Enthusiast" },
-    { icon: <Smile className="w-5 h-5" />, text: "Positive Vibes" },
+    { icon: <Coffee className="w-5 h-5" />, text: "System Building" },
+    { icon: <Smile className="w-5 h-5" />, text: "Problem Solving" },
   ];
 
   const qualities = [
-    { icon: <Award className="w-6 h-6" />, title: "Dedicated", description: "Committed to providing exceptional support" },
-    { icon: <Zap className="w-6 h-6" />, title: "Energetic", description: "Bringing positive energy to every interaction" },
-    { icon: <Brain className="w-6 h-6" />, title: "Analytical", description: "Finding the root cause of complex issues" },
-    { icon: <Lightbulb className="w-6 h-6" />, title: "Creative", description: "Developing innovative solutions" },
+    {
+      icon: <Award className="w-6 h-6" />,
+      title: "Practical Individual",
+      description: "Approaching tasks with a hands-on, solution-oriented mindset and strong moral principles."
+    },
+    {
+      icon: <Zap className="w-6 h-6" />,
+      title: "Professional",
+      description: "Maintaining high standards of professionalism and work ethics in all endeavors."
+    },
+    {
+      icon: <Brain className="w-6 h-6" />,
+      title: "Effective Communicator",
+      description: "Demonstrated ability to communicate clearly and confidently in both written and verbal forms."
+    },
+    {
+      icon: <Lightbulb className="w-6 h-6" />,
+      title: "Adaptable",
+      description: "Quickly adapting to new situations and challenges with resourceful solutions and continuous improvement mindset."
+    },
   ];
 
   return (
-    <section id="about" className="py-20 bg-gradient-to-b from-blue-50 to-white dark:from-blue-950 dark:to-neutral-900 w-full overflow-hidden relative">
+    <section id="about" className="py-20 min-h-screen bg-gradient-to-b from-blue-50 to-white dark:from-blue-950 dark:to-neutral-900 w-full overflow-hidden relative">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none">
         <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-blue-300 dark:bg-blue-700 blur-3xl" />
@@ -156,37 +182,138 @@ export const About = () => {
 
           <FloatingAnimation delay={0.3}>
             <p className="text-center text-muted-foreground max-w-2xl">
-              Passionate customer support professional dedicated to creating exceptional experiences
+              A practical individual with strong morals, professionalism, and work ethics
             </p>
           </FloatingAnimation>
         </div>
 
         {/* Main content with image */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
-          {/* Image column */}
+          {/* Image column with enhanced hover effects */}
           <FloatingAnimation delay={0.2} className="lg:col-span-5">
-            <motion.div
-              className="relative rounded-2xl overflow-hidden shadow-xl border-4 border-white dark:border-blue-900"
-              initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
-              whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
-              transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
-              viewport={{ once: true }}
-            >
-              <div className="aspect-[4/5] relative">
-                {/* Replace with actual image */}
-                <Image
-                  src="/placeholder-profile.svg"
-                  alt="Shelby Bianca Delgado"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-blue-900/70 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                  <h3 className="text-2xl font-bold mb-1">Shelby Delgado</h3>
-                  <p className="text-blue-100">Customer Support Professional</p>
+            <div className="perspective-[1200px] relative group cursor-pointer">
+              {/* Decorative elements that appear on hover */}
+              <motion.div
+                className="absolute -top-6 -left-6 w-20 h-20 rounded-full bg-gradient-to-r from-blue-400/20 to-cyan-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                animate={{
+                  scale: [1, 1.2, 1],
+                  rotate: [0, 15, 0]
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  repeatType: "reverse"
+                }}
+              />
+              <motion.div
+                className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full bg-gradient-to-r from-cyan-400/20 to-blue-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                animate={{
+                  scale: [1, 0.8, 1],
+                  rotate: [0, -15, 0]
+                }}
+                transition={{
+                  duration: 7,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  delay: 0.5
+                }}
+              />
+
+              {/* Animated border that appears on hover */}
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl opacity-0 group-hover:opacity-100 blur-sm transition-all duration-500 group-hover:duration-200"></div>
+
+              {/* Main image container with mouse-following 3D effect */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8, rotate: -5 }}
+                whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
+                transition={{ duration: 0.8, type: "spring", bounce: 0.4 }}
+                viewport={{ once: true }}
+              >
+                <MouseFollowCard
+                  className="relative rounded-2xl overflow-hidden shadow-xl border-4 border-white dark:border-blue-900 bg-white dark:bg-blue-950 transform-gpu transition-all duration-500 ease-out"
+                  rotateIntensity={20}
+                  glareOpacity={0.15}
+                  glareColor="rgba(100, 149, 237, 0.8)"
+                  shadow="0 25px 50px -12px rgba(59, 130, 246, 0.25)"
+                >
+                <div className="aspect-[4/5] relative">
+                  {/* Animated particles on hover */}
+                  <div className="absolute inset-0 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                    {[...Array(8)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-1.5 h-1.5 rounded-full bg-blue-400"
+                        style={{
+                          left: `${Math.random() * 100}%`,
+                          top: `${Math.random() * 100}%`,
+                        }}
+                        animate={{
+                          y: [0, -40 - (Math.random() * 60)],
+                          x: [0, (Math.random() * 20) - 10],
+                          scale: [0, 1, 0],
+                          opacity: [0, 1, 0]
+                        }}
+                        transition={{
+                          duration: 2 + Math.random() * 2,
+                          repeat: Infinity,
+                          delay: Math.random() * 2
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Image with hover zoom effect */}
+                  <Image
+                    src="/placeholder-profile.svg"
+                    alt="Shelby Bianca Delgado"
+                    fill
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-3"
+                  />
+
+                  {/* Enhanced gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-blue-900/80 via-blue-900/40 to-transparent opacity-100 group-hover:opacity-80 transition-opacity duration-500" />
+
+                  {/* Info container with animated elements */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform transition-transform duration-500 group-hover:translate-y-2">
+                    <div className="overflow-hidden">
+                      <motion.h3
+                        className="text-2xl font-bold mb-1 transform origin-left"
+                        whileHover={{ scale: 1.05 }}
+                      >
+                        Shelby Delgado
+                      </motion.h3>
+                    </div>
+                    <div className="overflow-hidden">
+                      <p className="text-blue-100 transform transition-all duration-500 group-hover:translate-x-2">
+                        Computer Engineering Student
+                      </p>
+                    </div>
+
+                    {/* Animated line that expands on hover */}
+                    <div className="h-0.5 w-0 bg-gradient-to-r from-blue-400 to-cyan-400 mt-3 group-hover:w-full transition-all duration-700 ease-out"></div>
+                  </div>
+
+                  {/* Decorative corner accents that appear on hover */}
+                  <div className="absolute top-4 left-4 w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute top-0 left-0 w-3 h-0.5 bg-blue-400"></div>
+                    <div className="absolute top-0 left-0 w-0.5 h-3 bg-blue-400"></div>
+                  </div>
+                  <div className="absolute top-4 right-4 w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute top-0 right-0 w-3 h-0.5 bg-cyan-400"></div>
+                    <div className="absolute top-0 right-0 w-0.5 h-3 bg-cyan-400"></div>
+                  </div>
+                  <div className="absolute bottom-4 left-4 w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute bottom-0 left-0 w-3 h-0.5 bg-cyan-400"></div>
+                    <div className="absolute bottom-0 left-0 w-0.5 h-3 bg-cyan-400"></div>
+                  </div>
+                  <div className="absolute bottom-4 right-4 w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                    <div className="absolute bottom-0 right-0 w-3 h-0.5 bg-blue-400"></div>
+                    <div className="absolute bottom-0 right-0 w-0.5 h-3 bg-blue-400"></div>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              </MouseFollowCard>
+              </motion.div>
+            </div>
           </FloatingAnimation>
 
           {/* Story column */}
@@ -213,10 +340,10 @@ export const About = () => {
                       transition={{ duration: 0.5, delay: 0.2 }}
                       viewport={{ once: true }}
                     >
-                      I'm <span className="text-blue-600 dark:text-blue-400 font-semibold">Shelby</span>, an enthusiastic customer support professional with a
-                      passion for creating positive experiences. I believe that great
-                      customer support is about more than just solving problems—it's
-                      about building relationships and making people feel valued.
+                      I'm <span className="text-blue-600 dark:text-blue-400 font-semibold">Shelby Bianca R. Delgado</span>, a
+                      <span className="text-blue-600 dark:text-blue-400 font-semibold"> practical individual</span> with strong morals,
+                      professionalism, and work ethics from San Jose, Rodriguez, Rizal. I have demonstrated
+                      effective communication skills during my senior high school and college years.
                     </motion.p>
 
                     <motion.p
@@ -226,11 +353,10 @@ export const About = () => {
                       transition={{ duration: 0.5, delay: 0.4 }}
                       viewport={{ once: true }}
                     >
-                      With a background in <span className="text-blue-600 dark:text-blue-400 font-semibold">communication</span> and a natural talent for
-                      <span className="text-blue-600 dark:text-blue-400 font-semibold"> empathy</span>, I strive to understand customer needs and provide
-                      solutions that exceed expectations. I'm excited to bring my
-                      skills and positive energy to help your team deliver exceptional
-                      customer experiences.
+                      My experiences as a <span className="text-blue-600 dark:text-blue-400 font-semibold">Student Assistant</span> at JBEST School of Technology
+                      have enhanced my ability to <span className="text-blue-600 dark:text-blue-400 font-semibold">communicate clearly and confidently</span>.
+                      I'm currently pursuing a <span className="text-blue-600 dark:text-blue-400 font-semibold">Bachelor of Science in Computer Engineering</span>
+                      and eager to build foundational skills in computer literacy and language fluency.
                     </motion.p>
 
                     <motion.div
@@ -241,7 +367,7 @@ export const About = () => {
                       viewport={{ once: true }}
                     >
                       <div className="h-0.5 flex-grow bg-gradient-to-r from-blue-400 to-transparent rounded-full" />
-                      <span className="text-blue-500 font-medium">My Passion</span>
+                      <span className="text-blue-500 font-medium">My Approach</span>
                       <div className="h-0.5 flex-grow bg-gradient-to-l from-blue-400 to-transparent rounded-full" />
                     </motion.div>
 
@@ -252,8 +378,8 @@ export const About = () => {
                       transition={{ duration: 0.5, delay: 0.8 }}
                       viewport={{ once: true }}
                     >
-                      "I'm dedicated to transforming customer interactions into meaningful connections,
-                      ensuring every person feels heard, valued, and supported throughout their journey."
+                      "I am committed to continuous improvement, adaptability, and applying a strong work ethic
+                      to achieve both personal and professional growth while contributing effectively to a dynamic team environment."
                     </motion.p>
                   </div>
                 </div>
@@ -262,50 +388,95 @@ export const About = () => {
           </div>
         </div>
 
-        {/* Expertise section - Honeycomb design */}
-        <div className="mb-24">
+        {/* Expertise section - Modern design */}
+        <div className="mb-24 relative">
+          {/* Background decorative elements */}
+          <div className="absolute -top-20 right-0 w-64 h-64 bg-blue-200/10 dark:bg-blue-700/10 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-20 left-0 w-72 h-72 bg-cyan-200/10 dark:bg-cyan-700/10 rounded-full blur-3xl"></div>
+
           <FloatingAnimation delay={0.4}>
-            <div className="text-center mb-16">
-              <h3 className="text-3xl font-bold mb-4 text-blue-600 dark:text-blue-400 inline-block relative">
-                My Expertise
-                <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
-              </h3>
-            </div>
+            <div className="text-center mb-12 relative">
+              {/* Decorative sparkles */}
+              <Sparkles color="#6495ED">
+                <h3 className="text-3xl font-bold mb-4 text-blue-600 dark:text-blue-400 inline-block relative">
+                  <TextAnimation text="Technical Skills" />
+                  <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
+                </h3>
+              </Sparkles>
 
-            {/* Honeycomb container with proper offset rows */}
-            <div className="flex flex-col items-center">
-              {/* First row - 3 hexagons */}
-              <div className="flex -mb-10">
-                {skills.slice(0, 3).map((skill, index) => (
-                  <HoneycombHex
-                    key={index}
-                    skill={skill}
-                    index={index}
-                  />
-                ))}
-              </div>
-
-              {/* Second row - 2 hexagons (offset) */}
-              <div className="flex ml-[4.4rem] -mb-10">
-                {skills.slice(3, 5).map((skill, index) => (
-                  <HoneycombHex
-                    key={index + 3}
-                    skill={skill}
-                    index={index + 3}
-                  />
-                ))}
-              </div>
+              <motion.p
+                className="text-muted-foreground max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                Areas where I excel and bring the most value with my technical knowledge and practical skills.
+              </motion.p>
 
               {/* Decorative elements */}
-              <div className="relative w-full max-w-2xl mt-8">
-                <div className="absolute -top-16 left-1/4 w-20 h-20 rounded-full bg-blue-400/5 blur-xl"></div>
-                <div className="absolute -top-20 right-1/4 w-24 h-24 rounded-full bg-cyan-400/5 blur-xl"></div>
+              <motion.div
+                className="absolute -top-6 -right-6 w-12 h-12 rounded-full bg-blue-400/5 blur-xl"
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                viewport={{ once: true }}
+              />
+              <motion.div
+                className="absolute -bottom-6 -left-6 w-12 h-12 rounded-full bg-cyan-400/5 blur-xl"
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                viewport={{ once: true }}
+              />
+            </div>
 
+            {/* Main content */}
+            <div className="relative">
+              {/* Connecting line */}
+              <motion.div
+                className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400/50 via-cyan-400/50 to-blue-400/50 transform -translate-x-1/2 hidden md:block"
+                initial={{ height: 0, opacity: 0 }}
+                whileInView={{ height: "100%", opacity: 1 }}
+                transition={{ duration: 1.5, delay: 0.3 }}
+                viewport={{ once: true }}
+              />
+
+              {/* Skills grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative">
+                {skills.map((skill, index) => {
+                  // Alternate sides for desktop layout
+                  const isEven = index % 2 === 0;
+                  return (
+                    <div key={index} className={`md:w-[90%] ${isEven ? 'md:mr-auto' : 'md:ml-auto'}`}>
+                      {/* Connection dot to center line (visible on desktop) */}
+                      <motion.div
+                        className="absolute left-1/2 w-3 h-3 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 transform -translate-x-1/2 hidden md:block z-10"
+                        style={{ top: `calc(${index * 25}% + 2rem)` }}
+                        initial={{ scale: 0, opacity: 0 }}
+                        whileInView={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.5 + (index * 0.1) }}
+                        viewport={{ once: true }}
+                      />
+
+                      {/* Expertise item */}
+                      <ExpertiseItem
+                        skill={skill}
+                        index={index}
+                        isEven={isEven}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Bottom decorative element */}
+              <div className="flex justify-center mt-12">
                 <motion.div
-                  className="w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400/30 to-transparent"
+                  className="w-24 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full"
                   initial={{ width: 0, opacity: 0 }}
-                  whileInView={{ width: "100%", opacity: 1 }}
-                  transition={{ duration: 1.5, delay: 0.5 }}
+                  whileInView={{ width: 96, opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.5 }}
                   viewport={{ once: true }}
                 />
               </div>
@@ -313,51 +484,192 @@ export const About = () => {
           </FloatingAnimation>
         </div>
 
-        {/* Key Qualities section - Timeline style */}
-        <div className="mb-24">
+        {/* Key Qualities section - Interactive Floating Bubbles */}
+        <div className="mb-24 relative overflow-hidden">
+          {/* Background decorative elements */}
+          <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-blue-200/10 dark:bg-blue-700/10 blur-3xl"></div>
+          <div className="absolute bottom-20 right-10 w-72 h-72 rounded-full bg-cyan-200/10 dark:bg-cyan-700/10 blur-3xl"></div>
+
           <FloatingAnimation delay={0.5}>
-            <div className="text-center mb-16">
-              <h3 className="text-3xl font-bold mb-4 text-blue-600 dark:text-blue-400 inline-block relative">
-                Key Qualities
-                <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
-              </h3>
+            <div className="text-center mb-16 relative">
+              <Sparkles color="#6495ED">
+                <h3 className="text-3xl font-bold mb-4 text-blue-600 dark:text-blue-400 inline-block relative">
+                  <TextAnimation text="Key Qualities" />
+                  <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
+                </h3>
+              </Sparkles>
+
+              <motion.p
+                className="text-muted-foreground max-w-2xl mx-auto"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                viewport={{ once: true }}
+              >
+                Personal attributes that define my approach to work, learning, and professional growth.
+              </motion.p>
             </div>
 
-            <div className="relative">
-              {/* Central timeline line */}
-              <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-400 via-cyan-400 to-blue-500 transform -translate-x-1/2"></div>
+            {/* Interactive Bubble Layout */}
+            <div className="relative py-10">
+              {/* Central decorative elements */}
+              <motion.div
+                className="absolute left-1/2 top-1/2 w-40 h-40 rounded-full bg-gradient-to-r from-blue-400/5 to-cyan-400/5 transform -translate-x-1/2 -translate-y-1/2 hidden md:block"
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{
+                  scale: 1,
+                  opacity: 0.5
+                }}
+                viewport={{ once: true }}
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.5, 0.7, 0.5]
+                }}
+                transition={{
+                  duration: 8,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  delay: 0.2
+                }}
+              />
 
-              <div className="space-y-16">
+              {/* Inner circle */}
+              <motion.div
+                className="absolute left-1/2 top-1/2 w-24 h-24 rounded-full bg-gradient-to-r from-blue-400/10 to-cyan-400/10 transform -translate-x-1/2 -translate-y-1/2 hidden md:block"
+                initial={{ scale: 0, opacity: 0 }}
+                whileInView={{
+                  scale: 1,
+                  opacity: 0.7
+                }}
+                viewport={{ once: true }}
+                animate={{
+                  scale: [1, 0.9, 1],
+                  opacity: [0.7, 0.9, 0.7]
+                }}
+                transition={{
+                  duration: 6,
+                  repeat: Infinity,
+                  repeatType: "reverse",
+                  delay: 0.4
+                }}
+              />
+
+              {/* Connecting lines */}
+              {[45, 135, 225, 315].map((angle, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute left-1/2 top-1/2 h-0.5 bg-gradient-to-r from-blue-400/10 to-transparent hidden md:block origin-left"
+                  style={{
+                    width: '80px',
+                    transform: `translate(-50%, -50%) rotate(${angle}deg)`
+                  }}
+                  initial={{ scaleX: 0, opacity: 0 }}
+                  whileInView={{ scaleX: 1, opacity: 1 }}
+                  transition={{ duration: 0.8, delay: 0.6 + (i * 0.1) }}
+                  viewport={{ once: true }}
+                />
+              ))}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 relative">
                 {qualities.map((quality, index) => (
                   <motion.div
                     key={index}
-                    className={`relative flex ${index % 2 === 0 ? 'justify-start' : 'justify-end'}`}
-                    initial={{ opacity: 0, x: index % 2 === 0 ? -50 : 50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.6, delay: 0.2 * index }}
+                    className="relative"
+                    initial={{
+                      opacity: 0,
+                      y: 30,
+                      x: index % 2 === 0 ? -20 : 20
+                    }}
+                    whileInView={{
+                      opacity: 1,
+                      y: 0,
+                      x: 0
+                    }}
+                    transition={{
+                      duration: 0.7,
+                      delay: 0.2 * index,
+                      type: "spring",
+                      bounce: 0.4
+                    }}
                     viewport={{ once: true }}
                   >
-                    {/* Timeline dot */}
-                    <div className="absolute left-1/2 top-8 w-6 h-6 rounded-full bg-gradient-to-r from-blue-400 to-cyan-500 transform -translate-x-1/2 z-10 shadow-md"></div>
+                    <div className="group relative bg-white dark:bg-neutral-900 rounded-2xl p-6 shadow-lg border border-blue-100 dark:border-blue-900/50 overflow-hidden backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+                      {/* Animated gradient background on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-blue-400/5 to-cyan-400/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-                    {/* Content container */}
-                    <div className={`w-5/12 relative ${index % 2 === 0 ? 'pr-12' : 'pl-12'}`}>
-                      {/* Connecting line to center */}
-                      <div className={`absolute top-8 ${index % 2 === 0 ? 'right-0 left-auto' : 'left-0 right-auto'} h-0.5 w-12 bg-gradient-to-r from-blue-400 to-cyan-500`}></div>
+                      {/* Floating bubbles */}
+                      <div className="absolute right-4 top-4 w-20 h-20">
+                        {[...Array(3)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className="absolute rounded-full bg-blue-400/10 dark:bg-blue-400/5"
+                            style={{
+                              width: 6 + i * 4,
+                              height: 6 + i * 4,
+                              top: i * 8,
+                              right: i * 6,
+                            }}
+                            animate={{
+                              y: [0, -10, 0],
+                              opacity: [0.3, 0.8, 0.3],
+                            }}
+                            transition={{
+                              duration: 3,
+                              delay: i * 0.3,
+                              repeat: Infinity,
+                              repeatType: "reverse",
+                            }}
+                          />
+                        ))}
+                      </div>
 
-                      {/* Content */}
-                      <div className="relative">
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className="w-12 h-12 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-blue-500">
-                            {quality.icon}
+                      {/* Content with icon */}
+                      <div className="relative z-10">
+                        <div className="flex items-start gap-5">
+                          <div className="relative">
+                            {/* Icon background with animated border */}
+                            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-blue-50 to-white dark:from-blue-900/40 dark:to-blue-950/40 flex items-center justify-center shadow-md relative overflow-hidden group-hover:shadow-lg transition-all duration-300">
+                              {/* Animated border */}
+                              <div className="absolute inset-0 overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                                <div className="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-blue-400 to-transparent transform -translate-x-full group-hover:translate-x-full transition-transform duration-1500"></div>
+                                <div className="absolute top-0 right-0 w-0.5 h-full bg-gradient-to-b from-transparent via-blue-400 to-transparent transform -translate-y-full group-hover:translate-y-full transition-transform duration-1500 delay-200"></div>
+                                <div className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-cyan-400 to-transparent transform translate-x-full group-hover:-translate-x-full transition-transform duration-1500 delay-400"></div>
+                                <div className="absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b from-transparent via-cyan-400 to-transparent transform translate-y-full group-hover:-translate-y-full transition-transform duration-1500 delay-600"></div>
+                              </div>
+
+                              {/* Icon */}
+                              <div className="text-blue-500 dark:text-blue-400 transform group-hover:scale-110 transition-transform duration-300">
+                                {quality.icon}
+                              </div>
+                            </div>
+
+                            {/* Connecting line to title */}
+                            <div className="absolute top-16 left-1/2 w-0.5 h-4 bg-gradient-to-b from-blue-400 to-transparent transform -translate-x-1/2"></div>
                           </div>
-                          <h4 className="text-xl font-bold text-blue-600 dark:text-blue-400">{quality.title}</h4>
+
+                          <div className="flex-1 pt-1">
+                            <h4 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2 group-hover:translate-x-1 transition-transform duration-300">{quality.title}</h4>
+                            <p className="text-muted-foreground">{quality.description}</p>
+
+                            {/* Animated underline on hover */}
+                            <div className="h-0.5 w-0 bg-gradient-to-r from-blue-400 to-cyan-500 rounded-full mt-3 group-hover:w-full transition-all duration-700 ease-out"></div>
+                          </div>
                         </div>
-                        <p className="text-muted-foreground ml-16">{quality.description}</p>
                       </div>
                     </div>
                   </motion.div>
                 ))}
+              </div>
+
+              {/* Bottom decorative element */}
+              <div className="flex justify-center mt-12">
+                <motion.div
+                  className="w-32 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent rounded-full"
+                  initial={{ width: 0, opacity: 0 }}
+                  whileInView={{ width: 128, opacity: 1 }}
+                  transition={{ duration: 1, delay: 0.5 }}
+                  viewport={{ once: true }}
+                />
               </div>
             </div>
           </FloatingAnimation>
@@ -368,7 +680,9 @@ export const About = () => {
           <FloatingAnimation delay={0.6}>
             <div className="text-center mb-12">
               <h3 className="text-3xl font-bold mb-4 text-blue-600 dark:text-blue-400 inline-block relative">
-                Interests & Hobbies
+                <Sparkles color="#6495ED">
+                  <TextAnimation text="Interests & Focus Areas" delay={0.1} />
+                </Sparkles>
                 <div className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent"></div>
               </h3>
             </div>
