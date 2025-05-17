@@ -17,9 +17,12 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Initialize theme from localStorage or system preference
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+
     // Check if there's a theme in localStorage
     const storedTheme = localStorage.getItem("theme") as Theme | null;
-    
+
     if (storedTheme) {
       setTheme(storedTheme);
     } else {
@@ -31,14 +34,17 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Update document when theme changes
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') return;
+
     const root = document.documentElement;
-    
+
     if (theme === "dark") {
       root.classList.add("dark");
     } else {
       root.classList.remove("dark");
     }
-    
+
     // Save to localStorage
     localStorage.setItem("theme", theme);
   }, [theme]);

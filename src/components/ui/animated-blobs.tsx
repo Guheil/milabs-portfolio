@@ -30,6 +30,14 @@ const Blob: React.FC<BlobProps> = ({
   // Convert string positions to numbers for animation calculations
   const initialX = typeof x === 'string' ? x : `${x}px`;
   const initialY = typeof y === 'string' ? y : `${y}px`;
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Only animate on client side to prevent hydration mismatch
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsMounted(true);
+    }
+  }, []);
 
   return (
     <motion.div
@@ -43,18 +51,21 @@ const Blob: React.FC<BlobProps> = ({
         filter: `blur(${blur}px)`,
         opacity,
       }}
-      animate={{
-        scale: [1, 1.03, 0.97, 1.01, 1],  // Even more subtle scale changes
-        x: [0, 15, -10, 8, 0],  // Even more subtle horizontal movement
-        y: [0, -12, 10, -8, 0],  // Even more subtle vertical movement
-      }}
-      transition={{
-        duration,
-        ease: "easeInOut",
-        repeat: Infinity,
-        repeatType: "reverse",
-        delay,
-      }}
+      // Only animate after component is mounted on client
+      {...(isMounted ? {
+        animate: {
+          scale: [1, 1.03, 0.97, 1.01, 1],  // Even more subtle scale changes
+          x: [0, 15, -10, 8, 0],  // Even more subtle horizontal movement
+          y: [0, -12, 10, -8, 0],  // Even more subtle vertical movement
+        },
+        transition: {
+          duration,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "reverse",
+          delay,
+        }
+      } : {})}
     />
   );
 };
@@ -90,6 +101,9 @@ export const AnimatedBlobs: React.FC<AnimatedBlobsProps> = ({
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Only run blob generation on the client side
+    if (typeof window === 'undefined') return;
+
     setIsMounted(true);
 
     // Generate blobs with deterministic positions for initial render
@@ -120,35 +134,33 @@ export const AnimatedBlobs: React.FC<AnimatedBlobsProps> = ({
       // Choose positions based on leftSideOnly prop
       const positions = leftSideOnly ? leftPositions : allPositions;
 
-      for (let i = 0; i < blobCount; i++) {
+      // Create deterministic blobs for server rendering
+      const fixedBlobs = Array(blobCount).fill(0).map((_, i) => {
         const color = colors[i % colors.length];
+        const position = positions[i % positions.length];
 
-        // Use deterministic values for server rendering, random only on client
-        const size = isMounted
-          ? Math.floor(Math.random() * (maxSize - minSize) + minSize)
-          : minSize + ((i * 50) % (maxSize - minSize));
+        return {
+          color,
+          size: minSize + ((i * 50) % (maxSize - minSize)),
+          x: position.x,
+          y: position.y,
+          duration: 30 + (i * 5),
+          delay: i * 2,
+          blur: minBlur + ((i * 10) % (maxBlur - minBlur)),
+          opacity: minOpacity + ((i * 0.03) % (maxOpacity - minOpacity))
+        };
+      });
 
-        const blur = isMounted
-          ? Math.floor(Math.random() * (maxBlur - minBlur) + minBlur)
-          : minBlur + ((i * 10) % (maxBlur - minBlur));
+      for (let i = 0; i < blobCount; i++) {
+        if (!isMounted) {
+          // Use deterministic values for server rendering
+          newBlobs.push(fixedBlobs[i]);
+        } else {
+          // Use random values only on client after hydration
+          const color = colors[i % colors.length];
 
-        const opacity = isMounted
-          ? Math.random() * (maxOpacity - minOpacity) + minOpacity
-          : minOpacity + ((i * 0.03) % (maxOpacity - minOpacity));
-
-        const duration = isMounted
-          ? Math.random() * 20 + 30 // Between 30 and 50 seconds for extremely slow, subtle movement
-          : 30 + (i * 5);
-
-        const delay = isMounted
-          ? Math.random() * 8 // More varied delays
-          : i * 2;
-
-        // Generate position based on leftSideOnly prop
-        let xPosition, yPosition;
-
-        if (isMounted) {
-          // Client-side random positions
+          // Generate position based on leftSideOnly prop
+          let xPosition;
           if (leftSideOnly) {
             // Only left half (0% to 40%)
             xPosition = `${Math.random() * 40}%`;
@@ -156,24 +168,18 @@ export const AnimatedBlobs: React.FC<AnimatedBlobsProps> = ({
             // Full width (0% to 100%)
             xPosition = `${Math.random() * 100}%`;
           }
-          yPosition = `${Math.random() * 100}%`;
-        } else {
-          // Server-side fixed positions
-          const position = positions[i % positions.length];
-          xPosition = position.x;
-          yPosition = position.y;
-        }
 
-        newBlobs.push({
-          color,
-          size,
-          x: xPosition,
-          y: yPosition,
-          duration,
-          delay,
-          blur,
-          opacity,
-        });
+          newBlobs.push({
+            color,
+            size: Math.floor(Math.random() * (maxSize - minSize) + minSize),
+            x: xPosition,
+            y: `${Math.random() * 100}%`,
+            duration: Math.random() * 20 + 30, // Between 30 and 50 seconds
+            delay: Math.random() * 8,
+            blur: Math.floor(Math.random() * (maxBlur - minBlur) + minBlur),
+            opacity: Math.random() * (maxOpacity - minOpacity) + minOpacity
+          });
+        }
       }
 
       setBlobs(newBlobs);

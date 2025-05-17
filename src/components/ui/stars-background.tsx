@@ -37,44 +37,42 @@ export const StarsBackground: React.FC<StarsBackgroundProps> = ({
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Only run star generation on the client side
+    if (typeof window === 'undefined') return;
+
     setIsMounted(true);
 
-    // Generate stars with deterministic positions for initial render
-    // to prevent hydration mismatch
+    // Generate stars with deterministic positions
     const generateStars = () => {
       const newStars: Star[] = [];
 
+      // Fixed positions for initial render to prevent hydration mismatch
+      const fixedPositions = Array(100).fill(0).map((_, i) => ({
+        x: ((i * 7) % 100),
+        y: ((i * 11) % 100),
+        size: ((i % (maxSize - minSize)) + minSize),
+        opacity: 0.7,
+        delay: (i % 3),
+        duration: 2.5,
+        id: i + 0.1
+      }));
+
       for (let i = 0; i < count; i++) {
-        // Use deterministic values for server rendering, random only on client
-        const randomId = isMounted ? Math.random() : i + 0.1;
-        const randomSize = isMounted
-          ? Math.random() * (maxSize - minSize) + minSize
-          : ((i % (maxSize - minSize)) + minSize);
-
-        const randomX = isMounted ? Math.random() * 100 : ((i * 7) % 100);
-        const randomY = isMounted ? Math.random() * 100 : ((i * 11) % 100);
-
-        const randomOpacity = isMounted
-          ? Math.random() * 0.4 + 0.5 // Between 0.5 and 0.9 - higher opacity
-          : 0.7;
-
-        const randomDelay = isMounted
-          ? Math.random() * 3 // Shorter delays for more active twinkling
-          : (i % 3);
-
-        const randomDuration = isMounted
-          ? Math.random() * 2 + 1.5 // Between 1.5 and 3.5 seconds - faster twinkling
-          : 2.5;
-
-        newStars.push({
-          id: randomId,
-          size: randomSize,
-          x: randomX,
-          y: randomY,
-          opacity: randomOpacity,
-          delay: randomDelay,
-          duration: randomDuration,
-        });
+        if (!isMounted) {
+          // Use deterministic values for server rendering
+          newStars.push(fixedPositions[i]);
+        } else {
+          // Use random values only on client after hydration
+          newStars.push({
+            id: Math.random(),
+            size: Math.random() * (maxSize - minSize) + minSize,
+            x: Math.random() * 100,
+            y: Math.random() * 100,
+            opacity: Math.random() * 0.4 + 0.5, // Between 0.5 and 0.9
+            delay: Math.random() * 3,
+            duration: Math.random() * 2 + 1.5, // Between 1.5 and 3.5 seconds
+          });
+        }
       }
 
       setStars(newStars);
@@ -82,10 +80,15 @@ export const StarsBackground: React.FC<StarsBackgroundProps> = ({
 
     generateStars();
 
-    // No need to regenerate stars frequently for a subtle effect
-    const interval = setInterval(generateStars, 10000);
+    // Only set up interval for regeneration after initial mount
+    let interval: NodeJS.Timeout | null = null;
+    if (isMounted) {
+      interval = setInterval(generateStars, 10000);
+    }
 
-    return () => clearInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
   }, [isMounted, count, maxSize, minSize]);
 
   return (
