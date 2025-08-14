@@ -104,24 +104,24 @@ const ExpertiseItem: React.FC<ExpertiseItemProps> = ({ skill, index, isEven = tr
 export const About = () => {
   const skills = [
     {
-      name: "Layout Artist",
+      name: "Administrative Office Skills",
       level: 90,
-      description: "Creating visually appealing layouts for various digital and print materials."
+      description: "Document handling, scheduling, filing, office organization."
     },
     {
       name: "Technical Skills",
       level: 85,
-      description: "Proficient in technical problem-solving and implementing practical solutions."
+      description: "Hardware/software installation, troubleshooting, Microsoft Office Suite."
     },
     {
-      name: "Hardware Development",
+      name: "Communication",
       level: 85,
-      description: "Experience with computer hardware components and system assembly."
+      description: "Professional correspondence, customer service, presentation skills."
     },
     {
-      name: "Operating System Setup",
+      name: "Time Management",
       level: 90,
-      description: "Installing and configuring operating systems and essential software."
+      description: "Prioritization under pressure, meeting deadlines, multitasking"
     },
     {
       name: "Microsoft Skills",
@@ -131,10 +131,10 @@ export const About = () => {
   ];
 
   const interests = [
-    { icon: <Heart className="w-5 h-5" />, text: "Computer Technology" },
-    { icon: <Star className="w-5 h-5" />, text: "Learning New Skills" },
-    { icon: <Coffee className="w-5 h-5" />, text: "System Building" },
-    { icon: <Smile className="w-5 h-5" />, text: "Problem Solving" },
+    { icon: <Heart className="w-5 h-5" />, text: "Problem Solving" },
+    { icon: <Star className="w-5 h-5" />, text: "Administrative Assistance" },
+    { icon: <Coffee className="w-5 h-5" />, text: "Effective Communication" },
+    { icon: <Smile className="w-5 h-5" />, text: "Computer Technology" },
   ];
 
   const qualities = [
