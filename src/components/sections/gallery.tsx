@@ -447,20 +447,20 @@ export const Gallery = () => {
               </motion.button>
 
               {/* Main content container */}
-              <motion.div
-                className="relative max-w-5xl w-full flex flex-col items-center mt-10"
-                onClick={(e) => e.stopPropagation()}
-                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                animate={{ scale: 1, opacity: 1, y: 0 }}
-                exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                transition={{ type: "spring", damping: 25 }}
+              <motion.div 
+                className="relative max-w-5xl w-full flex flex-col items-center mt-10 z-50" 
+                onClick={(e) => e.stopPropagation()} 
+                initial={{ scale: 0.9, opacity: 0, y: 20 }} 
+                animate={{ scale: 1, opacity: 1, y: 0 }} 
+                exit={{ scale: 0.9, opacity: 0, y: 20 }} 
+                transition={{ type: "spring", damping: 25 }} 
               >
                 {selectedImage && (
                   <>
                     {/* Image container with subtle floating animation */}
-                    <motion.div
-                      className="relative w-full max-w-full max-h-[80vh] overflow-hidden rounded-lg shadow-2xl"
-                      animate={{ y: [0, -5, 0] }}
+                    <motion.div 
+                      className="relative w-full max-w-full max-h-[80vh] overflow-hidden rounded-lg shadow-2xl z-10" 
+                      animate={{ y: [0, -5, 0] }} 
                       transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
                     >
                       <Image
@@ -476,40 +476,41 @@ export const Gallery = () => {
                           e.currentTarget.src = getPlaceholderImage(selectedImage);
                         }}
                       />
-
+                      
                       {/* Subtle gradient overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent pointer-events-none z-20" />
                     </motion.div>
 
                     {/* Info panel with animations */}
-                    <motion.div
-                      className="bg-black/50 backdrop-blur-sm p-6 rounded-b-lg w-full border-t border-blue-500/20"
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
+                    <motion.div 
+                      className="bg-black/50 backdrop-blur-sm p-6 rounded-b-lg w-full border-t border-blue-500/20 z-20" 
+                      initial={{ opacity: 0, y: 20 }} 
+                      animate={{ opacity: 1, y: 0 }} 
                       transition={{ delay: 0.2 }}
                     >
-                      <motion.h3
-                        className="text-xl font-bold text-white mb-2"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
+                      <motion.h3 
+                        className="text-xl font-bold text-white mb-2" 
+                        initial={{ opacity: 0, x: -20 }} 
+                        animate={{ opacity: 1, x: 0 }} 
                         transition={{ delay: 0.3 }}
                       >
                         {galleryItems.find(item => item.id === selectedImage)?.title}
                       </motion.h3>
-                      <motion.p
-                        className="text-blue-100"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
+                      
+                      <motion.p 
+                        className="text-blue-100" 
+                        initial={{ opacity: 0, x: -20 }} 
+                        animate={{ opacity: 1, x: 0 }} 
                         transition={{ delay: 0.4 }}
                       >
                         {galleryItems.find(item => item.id === selectedImage)?.description}
                       </motion.p>
-
+                      
                       {/* Animated underline */}
-                      <motion.div
-                        className="h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mt-4"
-                        initial={{ width: 0 }}
-                        animate={{ width: "100%" }}
+                      <motion.div 
+                        className="h-0.5 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full mt-4" 
+                        initial={{ width: 0 }} 
+                        animate={{ width: "100%" }} 
                         transition={{ delay: 0.5, duration: 0.8 }}
                       />
                     </motion.div>
