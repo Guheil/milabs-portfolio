@@ -222,7 +222,7 @@ export const Contact = () => {
                 {submitStatus === 'success' && (
                   <div className="mb-4 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
                     <p className="text-green-700 dark:text-green-400 text-sm">
-                      ✅ Message sent successfully! I'll get back to you soon.
+                      ✅ Message sent successfully! I`&apos;`ll get back to you soon.
                     </p>
                   </div>
                 )}
