@@ -9,13 +9,12 @@ import Sparkles from "@/components/ui/sparkles";
 import StarsBackground from "@/components/ui/stars-background";
 import GridPattern from "@/components/ui/grid-pattern";
 import { cn } from "@/lib/utils";
-
-// Define contact items outside the component to avoid re-creation on each render
+import emailjs from '@emailjs/browser';
 const contactItems = [
   {
     icon: <Mail className="w-5 h-5" />,
     title: "Email",
-    value: "shelbibiancadelgado@gmail.com",
+    value: "shelbiancadelgado@gmail.com",
     color: "from-blue-400 to-blue-600",
     delay: 0.2
   },
@@ -29,7 +28,7 @@ const contactItems = [
   {
     icon: <MapPin className="w-5 h-5" />,
     title: "Location",
-    value: "San Jose, Rodriguez, Rizal, South Luzon",
+    value: "National Capital Region, Philippines",
     color: "from-indigo-400 to-indigo-600",
     delay: 0.4
   },
@@ -43,32 +42,85 @@ const contactItems = [
 ];
 
 export const Contact = () => {
-  // Use client-side only state with useEffect to prevent hydration mismatch
   const [activeInput, setActiveInput] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  
+  // Form data state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
 
-  // Only enable client-side features after component has mounted
   useEffect(() => {
     setIsMounted(true);
+    // Initialize EmailJS with your public key
+    emailjs.init('axT_rJTqCGoHeEb6E'); // Replace with your EmailJS public key
   }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+
+    try {
+      // Send email using EmailJS
+      await emailjs.send(
+        'service_1kdum87', 
+        'template_1hss44k', 
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          to_email: 'shelbiancadelgado@gmail.com' // Your email
+        }
+      );
+
+      setSubmitStatus('success');
+      // Reset form
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: ''
+      });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+      // Reset status after 5 seconds
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+    }
+  };
 
   return (
     <section id="contact" className="py-20 min-h-screen w-full relative overflow-hidden">
-      {/* Cute background with gradient */}
+      {/* Background and decorative elements remain the same */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-50 to-white dark:from-blue-950/20 dark:to-neutral-900 -z-10" />
 
-      {/* Blue glowing stars in light mode */}
       <StarsBackground
         count={30}
-        color="#3B82F6" // Blue color
+        color="#3B82F6"
         maxSize={2.5}
         minSize={1.2}
         opacity={0.8}
         zIndex={1}
-        className="block dark:hidden" // Only show in light mode
+        className="block dark:hidden"
       />
 
-      {/* Stars for dark mode */}
       <StarsBackground
         count={30}
         color="#FFFFFF"
@@ -76,10 +128,9 @@ export const Contact = () => {
         minSize={1.2}
         opacity={0.7}
         zIndex={1}
-        className="hidden dark:block" // Only show in dark mode
+        className="hidden dark:block"
       />
 
-      {/* Subtle grid pattern - black in light mode, white in dark mode */}
       <GridPattern
         size={35}
         lineWidth={1.2}
@@ -89,7 +140,6 @@ export const Contact = () => {
         className="[--grid-color:#000000] dark:[--grid-color:#FFFFFF]"
       />
 
-      {/* Decorative elements */}
       <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-blue-200/20 dark:bg-blue-800/10 blur-3xl -z-5" />
       <div className="absolute bottom-20 right-10 w-80 h-80 rounded-full bg-cyan-200/20 dark:bg-cyan-800/10 blur-3xl -z-5" />
 
@@ -133,7 +183,6 @@ export const Contact = () => {
                   {contactItems.map((item, index) => (
                     <FloatingAnimation key={index} delay={item.delay}>
                       <div className="flex items-start gap-4 p-3 rounded-xl transition-all duration-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:translate-x-1">
-
                         <div className={`p-3 rounded-full bg-gradient-to-br ${item.color} text-white shadow-md`}>
                           {item.icon}
                         </div>
@@ -169,7 +218,24 @@ export const Contact = () => {
                   </span>
                 </h3>
 
-                <form className="space-y-5">
+                {/* Status messages */}
+                {submitStatus === 'success' && (
+                  <div className="mb-4 p-4 rounded-xl bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800">
+                    <p className="text-green-700 dark:text-green-400 text-sm">
+                      ✅ Message sent successfully! I'll get back to you soon.
+                    </p>
+                  </div>
+                )}
+
+                {submitStatus === 'error' && (
+                  <div className="mb-4 p-4 rounded-xl bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+                    <p className="text-red-700 dark:text-red-400 text-sm">
+                      ❌ Failed to send message. Please try again or contact me directly.
+                    </p>
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div className="space-y-2 relative">
                       <label
@@ -179,10 +245,14 @@ export const Contact = () => {
                           activeInput === "name" ? "text-blue-500" : ""
                         )}
                       >
-                        Name
+                        Name *
                       </label>
                       <input
                         id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        required
                         className="flex h-12 w-full rounded-xl border border-blue-100 dark:border-blue-900 bg-white/50 dark:bg-neutral-800/50 px-4 py-2 text-sm transition-all duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 dark:focus:border-blue-500 dark:focus:ring-blue-500/20 outline-none"
                         placeholder="Your name"
                         onFocus={() => setActiveInput("name")}
@@ -206,11 +276,15 @@ export const Contact = () => {
                           activeInput === "email" ? "text-blue-500" : ""
                         )}
                       >
-                        Email
+                        Email *
                       </label>
                       <input
                         id="email"
+                        name="email"
                         type="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
+                        required
                         className="flex h-12 w-full rounded-xl border border-blue-100 dark:border-blue-900 bg-white/50 dark:bg-neutral-800/50 px-4 py-2 text-sm transition-all duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 dark:focus:border-blue-500 dark:focus:ring-blue-500/20 outline-none"
                         placeholder="Your email"
                         onFocus={() => setActiveInput("email")}
@@ -235,10 +309,14 @@ export const Contact = () => {
                         activeInput === "subject" ? "text-blue-500" : ""
                       )}
                     >
-                      Subject
+                      Subject *
                     </label>
                     <input
                       id="subject"
+                      name="subject"
+                      value={formData.subject}
+                      onChange={handleInputChange}
+                      required
                       className="flex h-12 w-full rounded-xl border border-blue-100 dark:border-blue-900 bg-white/50 dark:bg-neutral-800/50 px-4 py-2 text-sm transition-all duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 dark:focus:border-blue-500 dark:focus:ring-blue-500/20 outline-none"
                       placeholder="Subject"
                       onFocus={() => setActiveInput("subject")}
@@ -262,10 +340,14 @@ export const Contact = () => {
                         activeInput === "message" ? "text-blue-500" : ""
                       )}
                     >
-                      Message
+                      Message *
                     </label>
                     <textarea
                       id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      required
                       className="flex min-h-[150px] w-full rounded-xl border border-blue-100 dark:border-blue-900 bg-white/50 dark:bg-neutral-800/50 px-4 py-3 text-sm transition-all duration-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 dark:focus:border-blue-500 dark:focus:ring-blue-500/20 outline-none resize-none"
                       placeholder="Your message"
                       onFocus={() => setActiveInput("message")}
@@ -282,10 +364,21 @@ export const Contact = () => {
                   </div>
 
                   <Button
-                    className="w-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-md transition-all duration-300 hover:shadow-lg group h-12"
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-md transition-all duration-300 hover:shadow-lg group h-12 disabled:opacity-50"
                   >
-                    <Send className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:translate-x-1" />
-                    Send Message
+                    {isSubmitting ? (
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 mr-2 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        Sending...
+                      </div>
+                    ) : (
+                      <>
+                        <Send className="w-4 h-4 mr-2 transition-transform duration-300 group-hover:translate-x-1" />
+                        Send Message
+                      </>
+                    )}
                   </Button>
                 </form>
               </div>

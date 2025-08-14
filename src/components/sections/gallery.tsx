@@ -16,68 +16,68 @@ import { X, ChevronLeft, ChevronRight, Maximize2, Camera } from "lucide-react";
 const galleryItems = [
   {
     id: 1,
-    title: "Photoshop",
-    description: "Providing exceptional support to clients with empathy and efficiency.",
+    title: "RTU NCR Representative (Photoshop)",
+    description: "Photoshop project for RTU NCR representative.",
     image: "/pic1.jpg",
-    category: "Work",
+    category: "Team",
   },
   {
     id: 2,
-    title: "Team Collaboration",
-    description: "Working together to solve complex customer challenges.",
+    title: "RTU NCR Representative (Photoshop)",
+    description: "Another RTU NCR representative Photoshop design.",
     image: "/pic2.jpg",
     category: "Team",
   },
   {
     id: 3,
-    title: "Problem Solving",
-    description: "Finding creative solutions to customer issues.",
+    title: "Computer Engineering ICPEP (Photoshop)",
+    description: "Photoshop design for ICPEP Computer Engineering.",
     image: "/pic3.jpg",
-    category: "Work",
+    category: "Team",
   },
   {
     id: 4,
-    title: "Customer Appreciation",
-    description: "Recognition for outstanding customer service.",
+    title: "1st Year Representative Achievement Post (Photoshop)",
+    description: "Achievement post for 1st Year Representative.",
     image: "/pic4.jpg",
     category: "Achievement",
   },
-  
   {
     id: 5,
-    title: "Training Workshop",
-    description: "Leading a workshop on customer communication strategies.",
+    title: "Vocational Livelihood Graduate Feature (Photoshop)",
+    description: "Feature post for Vocational Livelihood graduate.",
     image: "/pic6.jpg",
     category: "Education",
   },
   {
     id: 6,
-    title: "Customer Feedback",
-    description: "Gathering feedback to improve service quality.",
+    title: "Build Better With Us Fernwood Hardware Ad (Photoshop)",
+    description: "Fernwood Hardware promotional Photoshop ad.",
     image: "/pic7.jpg",
     category: "Work",
   },
   {
     id: 7,
-    title: "Customer Feedback",
-    description: "Gathering feedback to improve service quality.",
+    title: "Subok Na! Your Most Trusted Hardware – Fernwood (Canva)",
+    description: "Fernwood hardware trust-themed Canva design.",
     image: "/pic8.jpg",
     category: "Work",
   },
   {
     id: 8,
-    title: "Customer Feedback",
-    description: "Gathering feedback to improve service quality.",
+    title: "Trust Issues? Not With Our Hardware! – Fernwood (Canva)",
+    description: "Trust-focused Canva ad for Fernwood Hardware.",
     image: "/pic10.jpg",
     category: "Work",
   },
   {
     id: 9,
-    title: "Customer Feedback",
-    description: "Gathering feedback to improve service quality.",
+    title: "Ninoy Aquino Day Commemoration Post (Canva)",
+    description: "Canva post commemorating Ninoy Aquino Day.",
     image: "/pic11.jpg",
-    category: "Work",
+    category: "Education",
   },
+
   
 ];
 
@@ -238,7 +238,7 @@ export const Gallery = () => {
               transition={{ duration: 0.5, delay: 0.3 }}
               viewport={{ once: true }}
             >
-              A visual journey through my professional experiences and achievements.
+              Samples of my work showcasing my experiences and achievements.
             </motion.p>
           </div>
         </FloatingAnimation>
@@ -448,7 +448,7 @@ export const Gallery = () => {
 
               {/* Main content container */}
               <motion.div
-                className="relative max-w-5xl w-full max-h-[80vh] flex flex-col items-center"
+                className="relative max-w-5xl w-full flex flex-col items-center mt-10"
                 onClick={(e) => e.stopPropagation()}
                 initial={{ scale: 0.9, opacity: 0, y: 20 }}
                 animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -459,16 +459,18 @@ export const Gallery = () => {
                   <>
                     {/* Image container with subtle floating animation */}
                     <motion.div
-                      className="relative w-full h-auto max-h-[70vh] overflow-hidden rounded-lg shadow-2xl"
+                      className="relative w-full max-w-full max-h-[80vh] overflow-hidden rounded-lg shadow-2xl"
                       animate={{ y: [0, -5, 0] }}
                       transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
                     >
                       <Image
                         src={galleryItems.find(item => item.id === selectedImage)?.image || getPlaceholderImage(selectedImage)}
                         alt={galleryItems.find(item => item.id === selectedImage)?.title || "Gallery image"}
-                        width={1200}
-                        height={800}
-                        className="object-contain w-full h-auto"
+                        width={0}
+                        height={0}
+                        className="w-full h-auto max-w-full max-h-[80vh] object-contain"
+                        sizes="100vw"
+                        priority
                         onError={(e) => {
                           // Fallback to placeholder if image fails to load
                           e.currentTarget.src = getPlaceholderImage(selectedImage);
