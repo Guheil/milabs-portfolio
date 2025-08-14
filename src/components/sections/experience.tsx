@@ -34,6 +34,19 @@ export const Experience = () => {
   // Experience data from resume
   const experiences = [
     {
+      title: "Administrative Assistant",
+      subtitle: "Fernwood Corp Entrerprises OPC",
+      period: "2024 - 2025",
+      description: [
+        "Provided administrative support to ensure efficient office operations.",
+        "Handled correspondence, organized files, and maintained records.",
+        "Assisted in preparing reports, managing schedules, and coordinating meetings.",
+        "Communicated with clients and suppliers professionally and promptly.",
+        "Supported day-to-day operations and contributed to a productive work environment."
+      ],
+      icon: <Briefcase className="w-4 h-4" />
+    },
+    {
       title: "Student Assistant",
       subtitle: "JBEST School of Technology and Practical Skills Inc.",
       period: "2020 - 2023",

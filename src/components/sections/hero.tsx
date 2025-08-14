@@ -158,7 +158,7 @@ export const Hero = () => {
 
               {/* Image container with optimized hover effects */}
               <motion.div
-                className="relative w-[280px] h-[280px] md:w-[350px] md:h-[350px] rounded-full overflow-hidden border-4 border-white dark:border-blue-900 shadow-xl z-10"
+                className="relative w-[280px] h-[280px] md:w-[390px] md:h-[390px] rounded-full overflow-hidden border-4 border-white dark:border-blue-900 shadow-xl z-10"
                 onHoverStart={() => setIsImageHovered(true)}
                 onHoverEnd={() => setIsImageHovered(false)}
                 animate={{
@@ -169,7 +169,7 @@ export const Hero = () => {
               >
                 {/* Image with optimized hover effect */}
                 <Image
-                  src="/placeholder-profile.svg"
+                  src="/hero-pic.jpg"
                   alt="Shelby Bianca Delgado"
                   fill
                   className="object-cover transition-transform duration-500"

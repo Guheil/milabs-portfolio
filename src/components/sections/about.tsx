@@ -319,7 +319,7 @@ export const About = () => {
 
                   {/* Image with hover zoom effect */}
                   <Image
-                    src="/placeholder-profile.svg"
+                    src="/about-pic.jpg"
                     alt="Shelby Bianca Delgado"
                     fill
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-110 group-hover:rotate-3"
@@ -397,7 +397,7 @@ export const About = () => {
                     >
                       I&apos;m <span className="text-blue-600 dark:text-blue-400 font-semibold">Shelby Bianca R. Delgado</span>, a
                       <span className="text-blue-600 dark:text-blue-400 font-semibold"> practical individual</span> with strong morals,
-                      professionalism, and work ethics from San Jose, Rodriguez, Rizal. I have demonstrated
+                      professionalism, and work ethics from NCR Philippines. I have demonstrated
                       effective communication skills during my senior high school and college years.
                     </motion.p>
 

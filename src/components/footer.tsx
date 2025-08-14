@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import { Heart, GithubIcon, TwitterIcon, LinkedinIcon, InstagramIcon } from "lucide-react";
+import {  TwitterIcon, LinkedinIcon, InstagramIcon, FacebookIcon } from "lucide-react";
 
 export const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -20,8 +20,8 @@ export const Footer = () => {
               href="#"
               className="text-muted-foreground hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
             >
-              <GithubIcon className="w-5 h-5" />
-              <span className="sr-only">GitHub</span>
+              <FacebookIcon className="w-5 h-5" />
+              <span className="sr-only">Facebook</span>
             </Link>
             <Link
               href="#"
@@ -48,9 +48,7 @@ export const Footer = () => {
 
           <div className="text-center text-sm text-muted-foreground">
             <p className="flex items-center justify-center mb-2">
-              Made with{" "}
-              <Heart className="w-4 h-4 mx-1 text-blue-500 fill-blue-500" /> by
-              Xavier Gael San Juan
+              Shelby Bianca Delgado
             </p>
             <p>&copy; {currentYear} All rights reserved.</p>
           </div>

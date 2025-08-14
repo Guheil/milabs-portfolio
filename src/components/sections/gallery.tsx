@@ -12,50 +12,73 @@ import StarsBackground from "@/components/ui/stars-background";
 import GridPattern from "@/components/ui/grid-pattern";
 import { X, ChevronLeft, ChevronRight, Maximize2, Camera } from "lucide-react";
 
-// Sample gallery items - replace with actual content
+// Sample gallery items - FIXED IMAGE PATHS (removed /public)
 const galleryItems = [
   {
     id: 1,
-    title: "Customer Support Excellence",
+    title: "Photoshop",
     description: "Providing exceptional support to clients with empathy and efficiency.",
-    image: "/gallery/support-1.jpg", // Replace with actual images
+    image: "/pic1.jpg",
     category: "Work",
   },
   {
     id: 2,
     title: "Team Collaboration",
     description: "Working together to solve complex customer challenges.",
-    image: "/gallery/team-1.jpg",
+    image: "/pic2.jpg",
     category: "Team",
   },
   {
     id: 3,
     title: "Problem Solving",
     description: "Finding creative solutions to customer issues.",
-    image: "/gallery/problem-1.jpg",
+    image: "/pic3.jpg",
     category: "Work",
   },
   {
     id: 4,
     title: "Customer Appreciation",
     description: "Recognition for outstanding customer service.",
-    image: "/gallery/appreciation-1.jpg",
+    image: "/pic4.jpg",
     category: "Achievement",
   },
+  
   {
     id: 5,
     title: "Training Workshop",
     description: "Leading a workshop on customer communication strategies.",
-    image: "/gallery/workshop-1.jpg",
+    image: "/pic6.jpg",
     category: "Education",
   },
   {
     id: 6,
-    title: "Remote Support",
-    description: "Providing excellent support in a remote environment.",
-    image: "/gallery/remote-1.jpg",
+    title: "Customer Feedback",
+    description: "Gathering feedback to improve service quality.",
+    image: "/pic7.jpg",
     category: "Work",
   },
+  {
+    id: 7,
+    title: "Customer Feedback",
+    description: "Gathering feedback to improve service quality.",
+    image: "/pic8.jpg",
+    category: "Work",
+  },
+  {
+    id: 8,
+    title: "Customer Feedback",
+    description: "Gathering feedback to improve service quality.",
+    image: "/pic10.jpg",
+    category: "Work",
+  },
+  {
+    id: 9,
+    title: "Customer Feedback",
+    description: "Gathering feedback to improve service quality.",
+    image: "/pic11.jpg",
+    category: "Work",
+  },
+  
 ];
 
 // For demo purposes, we'll use placeholder images
@@ -294,17 +317,22 @@ export const Gallery = () => {
                     )}></div>
                   </div>
 
-                  {/* Image */}
+                  {/* Image - USING NEXT.JS IMAGE COMPONENT CORRECTLY */}
                   <div className="relative w-full h-full overflow-hidden">
                     <Image
-                      src={getPlaceholderImage(item.id)}
+                      src={item.image} 
                       alt={item.title}
                       fill
                       className={cn(
                         "object-cover transition-transform duration-700 ease-out",
                         isMounted && hoveredItem === item.id ? "scale-110" : "scale-100"
                       )}
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      sizes="(max-width: 790px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      priority={item.id === 1} // Add priority to first image for better performance
+                      onError={(e) => {
+                        // Fallback to placeholder if image fails to load
+                        e.currentTarget.src = getPlaceholderImage(item.id);
+                      }}
                     />
 
                     {/* Overlay - only apply hover effects on client side after mounting */}
@@ -436,11 +464,15 @@ export const Gallery = () => {
                       transition={{ duration: 6, repeat: Infinity, repeatType: "reverse" }}
                     >
                       <Image
-                        src={getPlaceholderImage(selectedImage)}
+                        src={galleryItems.find(item => item.id === selectedImage)?.image || getPlaceholderImage(selectedImage)}
                         alt={galleryItems.find(item => item.id === selectedImage)?.title || "Gallery image"}
                         width={1200}
                         height={800}
                         className="object-contain w-full h-auto"
+                        onError={(e) => {
+                          // Fallback to placeholder if image fails to load
+                          e.currentTarget.src = getPlaceholderImage(selectedImage);
+                        }}
                       />
 
                       {/* Subtle gradient overlay */}
