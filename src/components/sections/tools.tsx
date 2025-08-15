@@ -1,15 +1,12 @@
 "use client";
 
-import React, { useRef, useState} from "react";
+import React, { useRef } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
-
-// Fun facts data - no experience required!
+import Marquee from "react-fast-marquee";
 
 export default function Tools() {
   const sectionRef = useRef<HTMLElement>(null);
-  const funFactsRef = useRef<HTMLDivElement>(null);
-  const [isHovered, setIsHovered] = useState(false);
 
   // Scroll animations
   const { scrollYProgress } = useScroll({
@@ -30,6 +27,7 @@ export default function Tools() {
     { name: "Facebook", icon: "/facebook.png" },
     { name: "Instagram", icon: "/instagram.png" },
     { name: "ChatGPT", icon: "/chatgpt.png" },
+    { name: "Photoshop", icon: "/photoshop.png" },
   ];
 
   const funFacts = [
@@ -149,7 +147,6 @@ export default function Tools() {
 
         {/* Fun Facts Section */}
         <motion.div
-          ref={funFactsRef}
           className="max-w-6xl mx-auto px-6 mb-20"
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -221,30 +218,19 @@ export default function Tools() {
           </div>
         </motion.div>
 
-        {/* Single Column Scrolling Logos */}
-        <div 
-          className="relative overflow-hidden py-8"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          
-          <motion.div
-            className="flex items-center gap-24 md:gap-32 will-change-transform"
-            animate={{ x: "-25%" }}
-            transition={{
-              duration: 15, // Much faster animation
-              ease: "linear",
-              repeat: Infinity,
-              repeatType: "loop"
-            }}
-            style={{
-              animationPlayState: isHovered ? "paused" : "running"
-            }}
+        {/* Tools Marquee */}
+        <div className="py-30 overflow-visible mx-auto max-w-[70%] space-y-3">
+          {/* First Marquee - Left to Right */}
+          <Marquee
+            gradient={false}
+            speed={80}
+            pauseOnHover={true}
+            className="py-12 [&>*]:!overflow-visible"
           >
             {duplicatedTools.map((tool, index) => (
               <motion.div
                 key={index}
-                className="flex-shrink-0 group cursor-pointer"
+                className="mx-8 group cursor-pointer"
                 whileHover={{ scale: 1.15 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
@@ -283,7 +269,59 @@ export default function Tools() {
                 </motion.div>
               </motion.div>
             ))}
-          </motion.div>
+          </Marquee>
+
+          {/* Second Marquee - Right to Left */}
+          <Marquee
+            gradient={false}
+            speed={60}
+            pauseOnHover={true}
+            direction="right"
+            className="py-12 [&>*]:!overflow-visible"
+          >
+            {duplicatedTools.map((tool, index) => (
+              <motion.div
+                key={`bottom-${index}`}
+                className="mx-8 group cursor-pointer"
+                whileHover={{ scale: 1.15 }}
+                transition={{ duration: 0.3, ease: "easeOut" }}
+              >
+                <motion.div 
+                  className="relative p-3 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm border border-gray-200/50 dark:border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300"
+                  whileHover={{ y: -8, rotate: 2 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {/* Glow effect on hover */}
+                  <motion.div
+                    className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                    initial={false}
+                  />
+                  
+                  <div className="relative z-10">
+                    <motion.div 
+                      className="relative w-28 h-28 md:w-36 md:h-36 mb-2 filter group-hover:drop-shadow-lg transition-all duration-300"
+                      whileHover={{ scale: 1.1 }}
+                    >
+                      <Image
+                        src={tool.icon}
+                        alt={tool.name}
+                        fill
+                        className="object-contain"
+                      />
+                    </motion.div>
+                    
+                    <motion.span 
+                      className="text-gray-700 dark:text-gray-300 font-semibold text-sm md:text-base opacity-0 group-hover:opacity-100 transition-all duration-300 absolute -bottom-8 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-gray-900/90 dark:bg-gray-100/90 text-white dark:text-gray-900 px-3 py-1 rounded-full text-xs"
+                      initial={{ opacity: 0, y: 10 }}
+                      whileHover={{ opacity: 1, y: 0 }}
+                    >
+                      {tool.name}
+                    </motion.span>
+                  </div>
+                </motion.div>
+              </motion.div>
+            ))}
+          </Marquee>
         </div>
 
         {/* Enhanced Call to Action */}
@@ -303,7 +341,7 @@ export default function Tools() {
               {/* Button glow effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 via-purple-400/20 to-indigo-400/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               
-              <span className="relative z-10">Let`&apos;`s Work Together</span>
+              <span className="relative z-10">Let&apos;s Work Together</span>
               
               <motion.span
                 className="relative z-10 text-xl"
